@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
+import { sendResponse } from '../functions/sendResponse';
 import models from '../models/index';
+import bcrypt from "bcryptjs";
 import { geneTokens } from "../functions/JwtToken";
-import { sendResponse } from '../functions/sendResponse'
+import fs from "fs";
+import { fileUpload } from "../functions/fileUpload"
 
 
 export const SignupUser = async (req: any, res: Response) => {
@@ -15,6 +17,8 @@ export const SignupUser = async (req: any, res: Response) => {
             await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (resp: any) => {
                 if (resp) sendResponse(res, 200, { message: "User is exist" });
                 else {
+                    req?.body?.avatar && (req.body.avatar = await fileUpload(req?.body?.avatar));
+
                     await models?.User.create(req?.body).then((result: any) => {
                         delete result?.password, result?.isDeleted, result?.isAdmin
                         sendResponse(res, 201, { data: result });
@@ -27,7 +31,7 @@ export const SignupUser = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 204, { message: "Data is not available" });
+            sendResponse(res, 400, { message: "Data is not available" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -72,13 +76,23 @@ export const updateUser = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            await models?.User.findOneAndUpdate().then((result: any) => {
+            const { _id, avatar } = req?.user;
 
+            let oldAvatar: any;
+            if (req?.body?.avatar) {
+                oldAvatar = avatar;
+                req.body.avatar = await fileUpload(req?.avatar);
+            }
+
+            await models?.User.findOneAndUpdate({ _id }, { ...req?.body }, { new: true }).then((result: any) => {
+                if (oldAvatar) {
+                    fs.unlinkSync(`Assets/${oldAvatar}`)
+                }
+                sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
-                
+                sendResponse(res, 400, { message: error?.message });
             })
 
-            // sendResponse(res, 200, { data: req?.user });
         }
         else {
             sendResponse(res, 400, { message: "Data is not available" });
@@ -88,11 +102,3 @@ export const updateUser = async (req: any, res: Response) => {
     }
 }
 
-export const CheckApi = async (req: any, res: Response) => {
-    try {
-        sendResponse(res, 200, { data: req?.user });
-    } catch (error: any) {
-        sendResponse(res, 400, { message: error?.message });
-
-    }
-}

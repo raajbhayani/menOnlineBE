@@ -5,6 +5,7 @@ export interface IAddress extends Document {
     address: string
     landmark: string
     serviceAreasId: Types.ObjectId
+    pincode: number
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date

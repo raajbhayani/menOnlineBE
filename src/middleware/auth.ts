@@ -116,3 +116,31 @@ export const authContractor = async (req: any, res: Response, next: NextFunction
         });
     }
 }
+
+export const authGeneral = async (req: any, res: Response, next: NextFunction) => {
+    if (req.headers.authorization) {
+        const token = await req.headers.authorization.split(" ")[1];
+        jwt.verify(token, process.env.JWT_PRIVATE_KEY || 'manOnline8080', async (err: any, decoded: any) => {
+            if (decoded) {
+                await model?.User.findOne({ _id: decoded?._id, isDeleted: false }).then((result: any) => {
+                    if (result) {
+                        req.userData = result;
+                        next();
+                    } else {
+                        sendResponse(res, 401, { message: "Unauthorized" });
+                    }
+                })
+            } else if (err) {
+                return res.json({
+                    status: 401,
+                    message: "invalid token!",
+                });
+            }
+        });
+    } else {
+        return res.json({
+            status: 401,
+            message: "Unauthorized",
+        });
+    }
+}

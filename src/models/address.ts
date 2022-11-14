@@ -18,6 +18,9 @@ const addressSchema = new Schema<IAddress>({
         type: ObjectId,
         ref: "serviceAreas"
     },
+    pincode: {
+        type: Number
+    },
     isDeleted: {
         type: Boolean,
         default: false
