@@ -4,21 +4,29 @@ import { sendResponse } from '../functions/sendResponse';
 import { fileUpload } from "../functions/fileUpload"
 
 
-export const addBlog = async (req: any, res: Response) => {
+export const addOrder = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
+        const { to, categoryId, status, paymentMethod } = req?.body
+        if (Object.keys(req?.body).length > 0 && to && categoryId && status) {
+
+            const com = async () => {
+                req.body.by = _id;
+
+                req?.body?.image && (req.body.image = await fileUpload(req?.body?.image));
+
+                await models?.Order.create(req?.body).then((result: any) => {
+                    sendResponse(res, 201, { data: result });
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error?.message });
+                })
+            }
 
             const { _id } = req?.user;
 
-            req.body.userId = _id;
+            if (status == "complete" && paymentMethod) com();
+            else if (status == "progress") com();
+            else sendResponse(res, 400, { message: "Entre a required fields" });
 
-            req?.body?.image && (req.body.image = await fileUpload(req?.body?.image));
-
-            await models?.Blog.create(req?.body).then((result: any) => {
-                sendResponse(res, 201, { data: result });
-            }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
-            })
         } else {
             sendResponse(res, 400, { message: "Entre a required fields" });
         }
@@ -28,12 +36,16 @@ export const addBlog = async (req: any, res: Response) => {
 
 }
 
-export const getBlog = async (req: any, res: Response) => {
+export const getOrder = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
-
+            const { _id, isAdmin } = req?.user;
             const { page, limit } = req?.body;
-            await models?.Blog.find().sort({ _id: -1 }).limit(limit * 1)
+
+            let filter: any = {};
+            !isAdmin && (filter = { $or: [{ by: _id }, { to: _id }] })
+
+            await models?.Order.find(filter).sort({ _id: -1 }).limit(limit * 1)
                 .skip((page - 1) * limit).then((result: any) => {
                     sendResponse(res, 200, { data: result });
                 }).catch((error: any) => {
@@ -47,7 +59,7 @@ export const getBlog = async (req: any, res: Response) => {
     }
 }
 
-export const updateBlog = async (req: any, res: Response) => {
+export const updateOrder = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
@@ -55,7 +67,7 @@ export const updateBlog = async (req: any, res: Response) => {
 
             image && (req.body.image = await fileUpload(image));
 
-            await models?.Blog.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
+            await models?.Order.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
@@ -69,13 +81,13 @@ export const updateBlog = async (req: any, res: Response) => {
     }
 }
 
-export const deleteBlog = async (req: any, res: Response) => {
+export const deleteOrder = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
             const { _id } = req?.body;
 
-            await models?.Blog.findOneAndUpdate({ _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
+            await models?.Order.findOneAndUpdate({ _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });

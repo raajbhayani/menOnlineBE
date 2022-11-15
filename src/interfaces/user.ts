@@ -22,6 +22,7 @@ export interface IUser {
     isNeeded: boolean
     needsCategoryId: string[]
     needsLocationId: string[]
+    isKyc: boolean
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date

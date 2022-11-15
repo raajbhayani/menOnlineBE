@@ -14,21 +14,31 @@ const orderSchema = new Schema<IOrder>({
         required: true,
         ref: "user"
     },
-    state: {
-        type: String
+    byIsConformed: {
+        type: Boolean,
+    },
+    toIsConformed: {
+        type: Boolean,
+    },
+    status: {
+        type: String,
+        enum: ["progress", "complete"],
+        required: true
     },
     price: {
         type: Number
     },
     paymentMethod: {
-        type: String
+        type: String,
+        enum: ["cash", "razorpay"],
     },
     categoryId: {
         type: ObjectId,
-        ref: "subCategory"
+        ref: "subCategory",
+        required: true,
     },
     rate: {
-        type: Number
+        type: Number,
     },
     isDeleted: {
         type: Boolean,

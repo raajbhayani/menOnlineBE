@@ -31,7 +31,7 @@ export const SignupUser = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Data is not available" });
+            sendResponse(res, 400, { message: "Entre a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -64,10 +64,10 @@ export const Login = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Data is not available" });
+            sendResponse(res, 400, { message: "Entre a required fields" });
         }
     } catch (error) {
-        sendResponse(res, 400, { message: "Data is not available" });
+        sendResponse(res, 400, { message: "Entre a required fields" });
 
     }
 }
@@ -84,7 +84,7 @@ export const updateUser = async (req: any, res: Response) => {
                 req.body.avatar = await fileUpload(req?.avatar);
             }
 
-            await models?.User.findOneAndUpdate({ _id }, { ...req?.body }, { new: true }).then((result: any) => {
+            await models?.User.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
                 if (oldAvatar) {
                     fs.unlinkSync(`Assets/${oldAvatar}`)
                 }
@@ -95,7 +95,29 @@ export const updateUser = async (req: any, res: Response) => {
 
         }
         else {
-            sendResponse(res, 400, { message: "Data is not available" });
+            sendResponse(res, 400, { message: "Entre a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
+
+export const getAllUsers = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+
+            const { page, limit, list } = req?.body;
+
+            await models?.User.find(list).sort({ _id: -1 }).limit(limit * 1)
+                .skip((page - 1) * limit).then((result: any) => {
+                    sendResponse(res, 200, { data: result });
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error?.message });
+                })
+
+        }
+        else {
+            sendResponse(res, 400, { message: "Entre a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

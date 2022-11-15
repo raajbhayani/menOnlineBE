@@ -1,16 +1,19 @@
 import { Request, Response } from "express";
 import models from '../models/index';
 import { sendResponse } from '../functions/sendResponse';
+import { fileUpload } from "../functions/fileUpload"
 
-export const addAddress = async (req: any, res: Response) => {
+
+export const addCategory = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { img, icon } = req?.body;
 
-            req.body.userId = _id;
+            img && (req.body.img = await fileUpload(img));
+            icon && (req.body.icon = await fileUpload(icon));
 
-            await models?.Address.create(req?.body).then((result: any) => {
+            await models?.Category.create(req?.body).then((result: any) => {
                 sendResponse(res, 201, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
@@ -24,19 +27,18 @@ export const addAddress = async (req: any, res: Response) => {
 
 }
 
-export const getAddress = async (req: any, res: Response) => {
+export const getCategory = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { page, limit } = req?.body;
 
-            req.body.userId = _id;
-
-            await models?.Address.find({ _id: req?.body?._id, userId: _id, isDeleted: false }).then((result: any) => {
-                sendResponse(res, 201, { data: result });
-            }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
-            })
+            await models?.Category.find().sort({ _id: -1 }).limit(limit * 1)
+                .skip((page - 1) * limit).then((result: any) => {
+                    sendResponse(res, 200, { data: result });
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error?.message });
+                })
         } else {
             sendResponse(res, 400, { message: "Entre a required fields" });
         }
@@ -45,19 +47,21 @@ export const getAddress = async (req: any, res: Response) => {
     }
 }
 
-export const upDateAddress = async (req: any, res: Response) => {
+export const updateCategory = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { _id, img, icon } = req?.body;
 
-            req.body.userId = _id;
+            img && (req.body.img = await fileUpload(img));
+            icon && (req.body.icon = await fileUpload(icon));
 
-            await models?.Address.findOneAndUpdate({ _id: req?.body?._id, userId: _id, isDeleted: false }, req?.body, { new: true }).then((result: any) => {
-                sendResponse(res, 201, { data: result });
+            await models?.Category.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
+                sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
             })
+
         } else {
             sendResponse(res, 400, { message: "Entre a required fields" });
         }
@@ -66,19 +70,18 @@ export const upDateAddress = async (req: any, res: Response) => {
     }
 }
 
-export const deleteAddress = async (req: any, res: Response) => {
+export const deleteCategory = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { _id } = req?.body;
 
-            req.body.userId = _id;
-
-            await models?.Address.findOneAndUpdate({ _id: req?.body?._id, userId: _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
-                sendResponse(res, 201, { message: "Address deleted successfully" });
+            await models?.Category.findOneAndUpdate({ _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
+                sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
             })
+
         } else {
             sendResponse(res, 400, { message: "Entre a required fields" });
         }

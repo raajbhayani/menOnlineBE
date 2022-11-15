@@ -80,6 +80,10 @@ const userSchema = new Schema<IUser>({
         type: ObjectId,
         ref: "serviceAreas"
     }],
+    isKyc: {
+        type: Boolean,
+        default: false,
+    },
     isDeleted: {
         type: Boolean,
         default: false
