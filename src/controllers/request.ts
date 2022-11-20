@@ -6,7 +6,7 @@ export const addRequest = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
             req.body.by = _id;
 
@@ -16,7 +16,7 @@ export const addRequest = async (req: any, res: Response) => {
                 sendResponse(res, 400, { message: error?.message });
             })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -34,7 +34,7 @@ export const getRequest = async (req: any, res: Response) => {
                 sendResponse(res, 400, { message: error?.message });
             })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -54,7 +54,7 @@ export const updateRequest = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -74,7 +74,7 @@ export const deleteRequest = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

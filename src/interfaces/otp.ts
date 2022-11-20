@@ -3,6 +3,7 @@ import { Types, Document } from 'mongoose';
 export interface IOtp extends Document {
     userId: Types.ObjectId
     otp: number
+    mobile: number
     for: string
     isDeleted: boolean
     createdAt: Date

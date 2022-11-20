@@ -6,7 +6,7 @@ export const addAddress = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
             req.body.userId = _id;
 
@@ -16,7 +16,7 @@ export const addAddress = async (req: any, res: Response) => {
                 sendResponse(res, 400, { message: error?.message });
             })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -26,20 +26,17 @@ export const addAddress = async (req: any, res: Response) => {
 
 export const getAddress = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+        const { _id } = req?.me;
 
-            req.body.userId = _id;
+        req.body.userId = _id;
 
-            await models?.Address.find({ _id: req?.body?._id, userId: _id, isDeleted: false }).then((result: any) => {
-                sendResponse(res, 201, { data: result });
-            }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
-            })
-        } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
-        }
+        await models?.Address.find({ _id: req?.params?.id, userId: _id, isDeleted: false }).then((result: any) => {
+            sendResponse(res, 201, { data: result });
+        }).catch((error: any) => {
+            sendResponse(res, 400, { message: error?.message });
+        })
+
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }
@@ -49,7 +46,7 @@ export const upDateAddress = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
             req.body.userId = _id;
 
@@ -59,7 +56,7 @@ export const upDateAddress = async (req: any, res: Response) => {
                 sendResponse(res, 400, { message: error?.message });
             })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -68,20 +65,15 @@ export const upDateAddress = async (req: any, res: Response) => {
 
 export const deleteAddress = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
+        const { _id } = req?.me;
 
-            const { _id } = req?.user;
+        req.body.userId = _id;
 
-            req.body.userId = _id;
-
-            await models?.Address.findOneAndUpdate({ _id: req?.body?._id, userId: _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
-                sendResponse(res, 201, { message: "Address deleted successfully" });
-            }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
-            })
-        } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
-        }
+        await models?.Address.findOneAndUpdate({ _id: req?.params?._id, userId: _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
+            sendResponse(res, 201, { message: "Address deleted successfully" });
+        }).catch((error: any) => {
+            sendResponse(res, 400, { message: error?.message });
+        })
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

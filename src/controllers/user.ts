@@ -19,9 +19,12 @@ export const SignupUser = async (req: any, res: Response) => {
                 else {
                     req?.body?.avatar && (req.body.avatar = await fileUpload(req?.body?.avatar));
 
-                    await models?.User.create(req?.body).then((result: any) => {
-                        delete result?.password, result?.isDeleted, result?.isAdmin
-                        sendResponse(res, 201, { data: result });
+                    await models?.User.create(req?.body).then(async (result: any) => {
+                        const token = await geneTokens({ _id: result?._id.toString() });
+                        delete result?._doc?.password;
+                        delete result?._doc?.isDeleted;
+                        delete result?._doc?.isAdmin;
+                        sendResponse(res, 201, { data: result, token });
                     }).catch((error: any) => {
                         sendResponse(res, 401, { message: error?.message });
                     })
@@ -31,7 +34,7 @@ export const SignupUser = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -40,10 +43,13 @@ export const SignupUser = async (req: any, res: Response) => {
 
 export const Login = async (req: any, res: Response) => {
     try {
-        const { userName, email, mobile, password } = req?.body;
+        // const { userName, email, mobile, password } = req?.body;
         if (Object.keys(req?.body).length > 0) {
 
-            await models?.User.findOne({ $or: [{ userName: userName }, { email: email }, { mobile: mobile }], isDeleted: false }).then(async (result: any) => {
+            const password: string = req?.body?.password;
+            delete req?.body?.password;
+
+            await models?.User.findOne({ ...req.body, isDeleted: false }).then(async (result: any) => {
                 if (result) {
                     const isValid = await bcrypt?.compare(password, result?.password);
                     if (isValid) {
@@ -61,14 +67,36 @@ export const Login = async (req: any, res: Response) => {
                 else sendResponse(res, 401, { message: "User is not found" });
 
             }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error) {
-        sendResponse(res, 400, { message: "Entre a required fields" });
+        sendResponse(res, 400, { message: "Enter a required fields" });
 
+    }
+}
+
+export const LoginWithOtp = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+
+            const { mobile, otp } = req?.body;
+
+            await models?.Otps?.findOne({ mobile, otp, isDeleted: false }).populate({ path: "userId" }).then(async (result: any) => {
+                await models?.Otps?.findByIdAndUpdate({ _id: result?._id }, { isDeleted: true })
+                sendResponse(res, 200, { data: result });
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
     }
 }
 
@@ -76,18 +104,21 @@ export const updateUser = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id, avatar } = req?.user;
+            const { _id, avatar } = req?.me;
 
             let oldAvatar: any;
             if (req?.body?.avatar) {
                 oldAvatar = avatar;
                 req.body.avatar = await fileUpload(req?.avatar);
             }
-
-            await models?.User.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
+            req?.body?.password && delete req?.body?.password;
+            await models?.User.findByIdAndUpdate(_id, req?.body, { new: true }).then((result: any) => {
                 if (oldAvatar) {
                     fs.unlinkSync(`Assets/${oldAvatar}`)
                 }
+                delete result?._doc?.password;
+                delete result?._doc?.isDeleted;
+                delete result?._doc?.isAdmin;
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
@@ -95,7 +126,7 @@ export const updateUser = async (req: any, res: Response) => {
 
         }
         else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -117,10 +148,50 @@ export const getAllUsers = async (req: any, res: Response) => {
 
         }
         else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }
 }
+
+export const getUserDetails = async (req: any, res: Response) => {
+    try {
+
+        delete req?.me?.password;
+        delete req?.me?.isAdmin;
+        delete req?.me?.isDeleted;
+
+        sendResponse(res, 200, { data: req?.me });
+
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
+
+export const changePassword = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+
+            const { oldPassword, newPassword } = req?.body;
+
+            const isMatch = await req?.me.validatePassword(oldPassword);
+
+            if (!isMatch) sendResponse(res, 401, { message: "old password does not match" });
+            else if (newPassword === oldPassword) sendResponse(res, 401, { message: "old password and new password can't be same" });
+            else {
+                req.me.password = newPassword;
+                await req?.me.save().then(() => {
+                    sendResponse(res, 400, { data: true });
+                });
+            }
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
+
 

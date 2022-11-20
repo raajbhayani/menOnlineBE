@@ -21,14 +21,14 @@ export const addOrder = async (req: any, res: Response) => {
                 })
             }
 
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
             if (status == "complete" && paymentMethod) com();
             else if (status == "progress") com();
-            else sendResponse(res, 400, { message: "Entre a required fields" });
+            else sendResponse(res, 400, { message: "Enter a required fields" });
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -39,7 +39,7 @@ export const addOrder = async (req: any, res: Response) => {
 export const getOrder = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
-            const { _id, isAdmin } = req?.user;
+            const { _id, isAdmin } = req?.me;
             const { page, limit } = req?.body;
 
             let filter: any = {};
@@ -52,7 +52,7 @@ export const getOrder = async (req: any, res: Response) => {
                     sendResponse(res, 400, { message: error?.message });
                 })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -74,7 +74,7 @@ export const updateOrder = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -94,7 +94,7 @@ export const deleteOrder = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

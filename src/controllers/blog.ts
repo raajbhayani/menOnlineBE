@@ -8,7 +8,7 @@ export const addBlog = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
             req.body.userId = _id;
 
@@ -20,7 +20,7 @@ export const addBlog = async (req: any, res: Response) => {
                 sendResponse(res, 400, { message: error?.message });
             })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -40,7 +40,7 @@ export const getBlog = async (req: any, res: Response) => {
                     sendResponse(res, 400, { message: error?.message });
                 })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -62,7 +62,7 @@ export const updateBlog = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -82,7 +82,7 @@ export const deleteBlog = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

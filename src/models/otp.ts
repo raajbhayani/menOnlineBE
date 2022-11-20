@@ -3,11 +3,15 @@ import { IOtp } from "../interfaces/otp";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const otpSchema = new Schema<IOtp>({
+const otpsSchema = new Schema<IOtp>({
     userId: {
         type: ObjectId,
         required: true,
         ref: 'user'
+    },
+    mobile: {
+        type: Number,
+        required: true,
     },
     otp: {
         type: Number,
@@ -25,5 +29,5 @@ const otpSchema = new Schema<IOtp>({
     timestamps: true
 });
 
-const Otp = model<IOtp>('otp', otpSchema);
-export default Otp
+const Otps = model<IOtp>('otps', otpsSchema);
+export default Otps

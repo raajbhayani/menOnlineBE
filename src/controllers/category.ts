@@ -19,7 +19,7 @@ export const addCategory = async (req: any, res: Response) => {
                 sendResponse(res, 400, { message: error?.message });
             })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -40,7 +40,7 @@ export const getCategory = async (req: any, res: Response) => {
                     sendResponse(res, 400, { message: error?.message });
                 })
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -63,7 +63,7 @@ export const updateCategory = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -83,7 +83,7 @@ export const deleteCategory = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Entre a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

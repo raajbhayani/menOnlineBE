@@ -2,13 +2,14 @@ import Address from "./address";
 import Blog from "./blog";
 import Category from "./category";
 import Order from "./order";
-import Otp from "./otp";
+import Otps from "./otp";
 import Request from "./request";
 import AppReview from "./appReview";
 import ServiceAreas from "./serviceAreas";
 import Subscription from "./subCategory";
 import User from "./user";
 import Review from "./review";
+import WorkHistory from "./workHistory"
 
 
 export default {
@@ -21,6 +22,6 @@ export default {
     ServiceAreas,
     Subscription,
     User,
-    Otp,
+    Otps,
     Review
 }
