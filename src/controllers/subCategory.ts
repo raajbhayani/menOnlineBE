@@ -28,8 +28,7 @@ export const getSubCategory = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-
-            await models?.Subscription.find({}).then((result: any) => {
+            await models?.Subscription.find({ isDeleted: false }).then((result: any) => {
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });

@@ -80,6 +80,10 @@ const userSchema = new Schema<IUser>({
         type: ObjectId,
         ref: "serviceAreas"
     }],
+    isValid: {
+        type: Boolean,
+        default: false,
+    },
     isKyc: {
         type: Boolean,
         default: false,

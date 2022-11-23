@@ -5,10 +5,10 @@ import { addAddress, getAddress, upDateAddress, deleteAddress } from "../control
 
 router.post('/add', authGeneral, addAddress);
 
-router.get('/get', authGeneral, getAddress);
+router.get('/get/:id', authGeneral, getAddress);
 
 router.put('/update', authGeneral, upDateAddress);
 
-router.delete('/delete', authGeneral, deleteAddress);
+router.delete('/delete/:id', authGeneral, deleteAddress);
 
 export default router;

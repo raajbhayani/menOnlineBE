@@ -29,9 +29,7 @@ export const getAddress = async (req: any, res: Response) => {
 
         const { _id } = req?.me;
 
-        req.body.userId = _id;
-
-        await models?.Address.find({ _id: req?.params?.id, userId: _id, isDeleted: false }).then((result: any) => {
+        await models?.Address.find({ userId: _id, isDeleted: false }).then((result: any) => {
             sendResponse(res, 201, { data: result });
         }).catch((error: any) => {
             sendResponse(res, 400, { message: error?.message });
@@ -69,8 +67,8 @@ export const deleteAddress = async (req: any, res: Response) => {
 
         req.body.userId = _id;
 
-        await models?.Address.findOneAndUpdate({ _id: req?.params?._id, userId: _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
-            sendResponse(res, 201, { message: "Address deleted successfully" });
+        await models?.Address.findOneAndUpdate({ _id: req?.params?.id, userId: _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
+            sendResponse(res, 201, { message: true });
         }).catch((error: any) => {
             sendResponse(res, 400, { message: error?.message });
         })

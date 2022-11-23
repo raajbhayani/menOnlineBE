@@ -26,16 +26,13 @@ export const addRequest = async (req: any, res: Response) => {
 
 export const getRequest = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
 
-            await models?.Request.find({}).then((result: any) => {
-                sendResponse(res, 200, { data: result });
-            }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
-            })
-        } else {
-            sendResponse(res, 400, { message: "Enter a required fields" });
-        }
+        await models?.Request.find({}).then((result: any) => {
+            sendResponse(res, 200, { data: result });
+        }).catch((error: any) => {
+            sendResponse(res, 400, { message: error?.message });
+        })
+
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

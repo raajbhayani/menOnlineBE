@@ -30,18 +30,15 @@ export const addBlog = async (req: any, res: Response) => {
 
 export const getBlog = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
 
-            const { page, limit } = req?.body;
-            await models?.Blog.find().sort({ _id: -1 }).limit(limit * 1)
-                .skip((page - 1) * limit).then((result: any) => {
-                    sendResponse(res, 200, { data: result });
-                }).catch((error: any) => {
-                    sendResponse(res, 400, { message: error?.message });
-                })
-        } else {
-            sendResponse(res, 400, { message: "Enter a required fields" });
-        }
+        const { page, limit } = req?.body;
+        await models?.Blog.find().sort({ _id: -1 }).limit(limit * 1)
+            .skip((page - 1) * limit).then((result: any) => {
+                sendResponse(res, 200, { data: result });
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
+
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }
@@ -71,19 +68,14 @@ export const updateBlog = async (req: any, res: Response) => {
 
 export const deleteBlog = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
+        const { id } = req?.params;
 
-            const { _id } = req?.body;
+        await models?.Blog.findOneAndUpdate({ id: id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
+            sendResponse(res, 200, { data: result });
+        }).catch((error: any) => {
+            sendResponse(res, 400, { message: error?.message });
+        })
 
-            await models?.Blog.findOneAndUpdate({ _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
-                sendResponse(res, 200, { data: result });
-            }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
-            })
-
-        } else {
-            sendResponse(res, 400, { message: "Enter a required fields" });
-        }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

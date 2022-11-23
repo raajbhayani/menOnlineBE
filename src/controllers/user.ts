@@ -21,6 +21,9 @@ export const SignupUser = async (req: any, res: Response) => {
 
                     await models?.User.create(req?.body).then(async (result: any) => {
                         const token = await geneTokens({ _id: result?._id.toString() });
+                        const otp = Math.floor(1000 + Math.random() * 9000);
+
+                        await models?.Otps.create({ userId: result?._id, mobile, otp, for: "User sign up code" })
                         delete result?._doc?.password;
                         delete result?._doc?.isDeleted;
                         delete result?._doc?.isAdmin;
@@ -87,7 +90,15 @@ export const LoginWithOtp = async (req: any, res: Response) => {
 
             await models?.Otps?.findOne({ mobile, otp, isDeleted: false }).populate({ path: "userId" }).then(async (result: any) => {
                 await models?.Otps?.findByIdAndUpdate({ _id: result?._id }, { isDeleted: true })
-                sendResponse(res, 200, { data: result });
+                await models?.User.findOne({ mobile, isDeleted: false }).then(async (userRes: any) => {
+                    const token = await geneTokens({ _id: result?._id.toString() });
+                    delete userRes?._doc?.password;
+                    delete userRes?._doc?.isDeleted;
+                    delete userRes?._doc?.isAdmin;
+                    sendResponse(res, 200, { data: userRes, token });
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error?.message });
+                })
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
             })
@@ -111,7 +122,7 @@ export const updateUser = async (req: any, res: Response) => {
                 oldAvatar = avatar;
                 req.body.avatar = await fileUpload(req?.avatar);
             }
-            req?.body?.password && delete req?.body?.password;
+            req?.body?.password && (req.body.password = await bcrypt.hash(req?.body?.password, 10));
             await models?.User.findByIdAndUpdate(_id, req?.body, { new: true }).then((result: any) => {
                 if (oldAvatar) {
                     fs.unlinkSync(`Assets/${oldAvatar}`)
@@ -163,7 +174,6 @@ export const getUserDetails = async (req: any, res: Response) => {
         delete req?.me?.isDeleted;
 
         sendResponse(res, 200, { data: req?.me });
-
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

@@ -6,7 +6,6 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const otpsSchema = new Schema<IOtp>({
     userId: {
         type: ObjectId,
-        required: true,
         ref: 'user'
     },
     mobile: {
