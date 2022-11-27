@@ -4,7 +4,7 @@ export interface IOtp extends Document {
     userId: Types.ObjectId
     otp: number
     mobile: number
-    for: string
+    messageFor: string
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date

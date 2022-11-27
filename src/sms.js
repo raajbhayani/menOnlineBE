@@ -1,0 +1,1 @@
+import fast2sms from 'fast-two-sms';

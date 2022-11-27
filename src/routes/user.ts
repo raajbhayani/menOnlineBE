@@ -9,7 +9,7 @@ router.post('/login', Login);
 
 router.put('/update', authGeneral, updateUser);
 
-router.post('/loginWithOtp', authGeneral, LoginWithOtp);
+router.post('/loginWithOtp', LoginWithOtp);
 
 router.get('/userDetails', authGeneral, getUserDetails);
 

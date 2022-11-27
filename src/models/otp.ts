@@ -16,7 +16,7 @@ const otpsSchema = new Schema<IOtp>({
         type: Number,
         required: true
     },
-    for: {
+    messageFor: {
         type: String,
         required: true
     },

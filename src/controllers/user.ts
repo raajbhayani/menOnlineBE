@@ -12,7 +12,7 @@ export const SignupUser = async (req: any, res: Response) => {
     const { userName, email, mobile } = req?.body;
 
     try {
-        if (Object.keys(req?.body).length > 0) {
+        if (Object.keys(req?.body).length > 0 && req?.body?.mobile.toString().length == 10) {
 
             await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (resp: any) => {
                 if (resp) sendResponse(res, 200, { message: "User is exist" });
@@ -23,7 +23,7 @@ export const SignupUser = async (req: any, res: Response) => {
                         const token = await geneTokens({ _id: result?._id.toString() });
                         const otp = Math.floor(1000 + Math.random() * 9000);
 
-                        await models?.Otps.create({ userId: result?._id, mobile, otp, for: "User sign up code" })
+                        await models?.Otps.create({ userId: result?._id, mobile, otp, messageFor: "User sign up code" })
                         delete result?._doc?.password;
                         delete result?._doc?.isDeleted;
                         delete result?._doc?.isAdmin;
@@ -87,18 +87,22 @@ export const LoginWithOtp = async (req: any, res: Response) => {
         if (Object.keys(req?.body).length > 0) {
 
             const { mobile, otp } = req?.body;
+            // 
+            await models?.Otps.findOne({ mobile, otp, isDeleted: false }).populate({ path: "userId" }).then(async (resultRes: any) => {
 
-            await models?.Otps?.findOne({ mobile, otp, isDeleted: false }).populate({ path: "userId" }).then(async (result: any) => {
-                await models?.Otps?.findByIdAndUpdate({ _id: result?._id }, { isDeleted: true })
-                await models?.User.findOne({ mobile, isDeleted: false }).then(async (userRes: any) => {
-                    const token = await geneTokens({ _id: result?._id.toString() });
-                    delete userRes?._doc?.password;
-                    delete userRes?._doc?.isDeleted;
-                    delete userRes?._doc?.isAdmin;
-                    sendResponse(res, 200, { data: userRes, token });
-                }).catch((error: any) => {
-                    sendResponse(res, 400, { message: error?.message });
-                })
+                if (!resultRes) {
+                    sendResponse(res, 400, { message: "Entre a valid otp" });
+                } else {
+                    // await models?.Otps.findByIdAndUpdate({ _id: result?._id }, { isDeleted: true })
+                    const token = await geneTokens({ _id: resultRes?.userId?._id.toString() });
+                    let userData = resultRes?._doc?.userId;
+                    delete userData?.password;
+                    delete userData?.isDeleted;
+                    delete userData?.isAdmin;
+                    console.log('🚀 ~ file: user.ts ~ line 106 ~ awaitmodels?.Otps.findOne ~ userData', userData);
+                    sendResponse(res, 200, { data: userData, token });
+
+                }
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
             })
