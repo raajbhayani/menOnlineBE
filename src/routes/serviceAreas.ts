@@ -5,10 +5,10 @@ import { addServiceAreas, getServiceAreas, updateServiceAreas, deleteServiceArea
 
 router.post('/add', authAdmin, addServiceAreas);
 
-router.get('/get', addServiceAreas);
+router.get('/get/:page/:limit', getServiceAreas);
 
-router.put('/update', authAdmin, addServiceAreas);
+router.put('/update', authAdmin, updateServiceAreas);
 
-router.delete('/delete', authAdmin, addServiceAreas);
+router.delete('/delete', authAdmin, deleteServiceAreas);
 
 export default router;

@@ -186,18 +186,22 @@ export const getUserDetails = async (req: any, res: Response) => {
 export const changePassword = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
-
+            const { me } = req;
             const { oldPassword, newPassword } = req?.body;
 
-            const isMatch = await req?.me.validatePassword(oldPassword);
+            const isMatch = true;
+            // = await me.validatePassword(oldPassword);
 
             if (!isMatch) sendResponse(res, 401, { message: "old password does not match" });
             else if (newPassword === oldPassword) sendResponse(res, 401, { message: "old password and new password can't be same" });
             else {
-                req.me.password = newPassword;
-                await req?.me.save().then(() => {
-                    sendResponse(res, 400, { data: true });
-                });
+                me.password = newPassword;
+                // let newUsPass = me;
+                me.save().then(() => {
+                    sendResponse(res, 200, { data: true });
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error?.message })
+                })
             }
 
         } else {
@@ -208,4 +212,24 @@ export const changePassword = async (req: any, res: Response) => {
     }
 }
 
+export const savePassword = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+            const { me, body } = req;
+            const { password } = body;
+
+            me.password = password;
+            await me.save().then((result: any) => {
+                sendResponse(res, 200, { data: true })
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error.message })
+            })
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
 

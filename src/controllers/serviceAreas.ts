@@ -6,23 +6,26 @@ export const addServiceAreas = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { data } = req?.body;
-            let count = 0;
-            for (let i in data) {
-                await models?.ServiceAreas.create({
-                    name: data[i].city,
-                    isCity: data[i].city,
-                    district: data[i].city,
-                    state: data[i].state,
-                    country: 'India'
-                }).then((result: any) => {
-                    count++;
-                }).catch((error: any) => {
-                    sendResponse(res, 400, { message: error?.message });
-                })
-            }
+            // const { data } = req?.body;
+            // let count: any = [];
+            // for (let i in data) {
+            //     count.push({
+            //         name: data[i].city,
+            //         isCity: true,
+            //         district: data[i].city,
+            //         state: data[i].state,
+            //         country: 'India'
+            //     })
+            // }
+            await models?.ServiceAreas.create(req?.body).then((result: any) => {
+                sendResponse(res, 201, { data: result })
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
 
-            if (count === data.length) sendResponse(res, 201, { data: true });
+            // await models?.ServiceAreas.insertMany(count).then((result: any) => sendResponse(res, 201, { data: true })).catch((error: any) => {
+            //     sendResponse(res, 400, { message: error?.message });
+            // });
 
         } else {
             sendResponse(res, 400, { message: "Enter a required fields" });
@@ -45,6 +48,7 @@ export const getServiceAreas = async (req: any, res: Response) => {
             })
 
     } catch (error: any) {
+        console.log("🚀 ~ file: serviceAreas.ts ~ line 51 ~ getServiceAreas ~ error", error)
         sendResponse(res, 400, { message: error?.message });
     }
 }
@@ -68,8 +72,6 @@ export const updateServiceAreas = async (req: any, res: Response) => {
 
 export const deleteServiceAreas = async (req: any, res: Response) => {
     try {
-
-
         await models?.ServiceAreas.findOneAndUpdate({ _id: req?.body }, { isDeleted: true }).then((result: any) => {
             sendResponse(res, 200, { data: result });
         }).catch((error: any) => {

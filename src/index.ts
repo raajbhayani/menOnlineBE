@@ -19,11 +19,12 @@ app.use('/user', Routes?.userRoutes);
 app.use('/otp', Routes?.otpRouter);
 app.use('/address', Routes?.addressRouter);
 app.use('/serviceAreas', Routes?.serviceAreasRouter);
+app.use('/blog', Routes?.blogRouter);
 
 app.get('/', async (req: Request, res: Response) => {
-    const users = await models.User.find()
+    // const users = await models.User.find()
     res.json({
-        users
+        message: "Done"
     });
 });
 
