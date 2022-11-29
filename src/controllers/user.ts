@@ -134,17 +134,17 @@ export const updateUser = async (req: any, res: Response) => {
                 delete result?._doc?.password;
                 delete result?._doc?.isDeleted;
                 delete result?._doc?.isAdmin;
-                sendResponse(res, 200, { data: result });
+                sendResponse(res, 200, { data: result, status: 500 });
             }).catch((error: any) => {
-                sendResponse(res, 400, { message: error?.message });
+                sendResponse(res, 400, { message: error?.message, status: 500 });
             })
 
         }
         else {
-            sendResponse(res, 400, { message: "Enter a required fields" });
+            sendResponse(res, 400, { message: "Enter a required fields", status: 500 });
         }
     } catch (error: any) {
-        sendResponse(res, 400, { message: error?.message });
+        sendResponse(res, 400, { message: error?.message, status: 500 });
     }
 }
 
