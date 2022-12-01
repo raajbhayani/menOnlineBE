@@ -31,9 +31,6 @@ export const connectSocketServer = async (server: any) => {
     io.on("connection", async (socket: any) => {
         console.log('🚀 ~ file: socket.ts ~ line 32 ~ io.on ~ socket', socket.id);
     })
-
-
-
 }
 
 export default { connectSocketServer }
