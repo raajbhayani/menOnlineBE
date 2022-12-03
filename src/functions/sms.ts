@@ -1,6 +1,6 @@
-import fast2sms from 'fast-two-sms';
+const fast2sms = require('fast-two-sms');
 
-export const sendMessage = (numbers, otp) => {
+export const sendMessage = (numbers: any, otp: number) => {
     return new Promise((resolve, reject) => {
         var options = {
             authorization: process.env.MESSAGE_AUTH_KEY,
@@ -8,9 +8,9 @@ export const sendMessage = (numbers, otp) => {
             numbers
         }
 
-        fast2sms.sendMessage(options).then((result) => {
+        fast2sms.sendMessage(options).then((result: any) => {
             reject(result)
-        }).catch((error) => {
+        }).catch((error: any) => {
             resolve(error)
         })
     })

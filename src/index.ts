@@ -7,6 +7,7 @@ import cors from "cors";
 import models from "./models/index";
 import Routes from "./routes/index";
 import Socket from "./socket/socket";
+import { sendMessageFun } from "./controllers/otp";
 // import fast2sms from 'fast-two-sms';
 
 const app = express();
@@ -21,11 +22,19 @@ app.use('/address', Routes?.addressRouter);
 app.use('/serviceAreas', Routes?.serviceAreasRouter);
 app.use('/blog', Routes?.blogRouter);
 
+sendMessageFun
+
 app.get('/', async (req: Request, res: Response) => {
-    // const users = await models.User.find()
-    res.json({
-        message: "Done"
-    });
+    sendMessageFun(9925185934, 'For login').then((result: any) => {
+        res.json({
+            result
+        });
+    }).catch((error: any) => {
+        res.json({
+            message: error?.message
+        });
+    })
+
 });
 
 connectDB().then(() => {
