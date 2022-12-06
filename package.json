@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Rajbhayani4/manOnlineBE#readme",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/ejs": "^3.1.1",
     "@types/express": "^4.17.14",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/lodash": "^4.14.182",
@@ -41,6 +42,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
+    "ejs": "^3.1.8",
     "express": "^4.17.3",
     "fast-two-sms": "^3.0.0",
     "jsonwebtoken": "^8.5.1",

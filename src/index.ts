@@ -9,6 +9,7 @@ import Routes from "./routes/index";
 import Socket from "./socket/socket";
 import { sendMessageFun } from "./controllers/otp";
 import { sendEmail } from "./functions/emailService";
+import { sendMessage } from "./functions/sms";
 // import fast2sms from 'fast-two-sms';
 
 const app = express();
@@ -26,7 +27,17 @@ app.use('/blog', Routes?.blogRouter);
 sendMessageFun
 
 app.get('/', async (req: Request, res: Response) => {
-
+    const name: string = 'rajbhayani.scaleteam@gmail.com';
+    const obj: any = {
+        name,
+        otp: "7895",
+    }
+    // const data: any = sendEmail(name, 'Login', obj);
+    sendMessage([9925185934], 1234);
+    res.json({
+        status: "Ok",
+        // data
+    })
 });
 
 connectDB().then(() => {

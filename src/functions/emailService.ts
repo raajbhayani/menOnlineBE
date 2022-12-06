@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
+import ejs from "ejs";
+import path from "path";
 
-export const sendEmail = async (to: any, subject: string, content: string) => {
+export const sendEmail = async (user: any, emailFlag: string, obj: any) => {
 
     const transporter = await nodemailer.createTransport({
         // host: String(process.env.EMAIL_HOST),
@@ -8,19 +10,59 @@ export const sendEmail = async (to: any, subject: string, content: string) => {
         service: "gmail",
         auth: {
             // user: process.env.EMAIL_USERNAME,
-            user: "rajbhayani4@gmail.com",
-            pass: "qourkmnwcklnznuo"
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD
             // pass: process.env.EMAIL_PASSWORD
         }
     });
-
-    const mailOptions = {
+    interface emailInter {
+        from: any
+        to: string
+        subject: string
+        test: string
+        html: string
+    }
+    const mailOptions: any = {
         from: process.env.EMAIL_USERNAME,
-        to,
-        subject: subject,
-        text: content
+        to: user,
+        // subject: "subject",
+        // text: "content"
     };
 
-    await transporter.sendMail(mailOptions);
+    if (emailFlag == "Login") {
+        const { name, otp } = obj;
+        const propose: any = "Account Login code"
+        ejs.renderFile(path.join(__dirname, "../views") + "/otp.ejs",
+            { name, otp, propose },
+            (err, data) => {
+                if (err) console.log("Error :", err);
+                mailOptions["subject"] = "Email Verification";
+                mailOptions["html"] = data;
+            }
+        )
+    }
+
+    if (emailFlag == "Verification") {
+        const { name, otp } = obj;
+        const propose: any = "Account verification code"
+        ejs.renderFile(path.join(__dirname, "../views") + "/otp.ejs",
+            { name, otp, propose },
+            (err, data) => {
+                if (err) console.log("Error :", err);
+                mailOptions["subject"] = "Email Verification";
+                mailOptions["html"] = data;
+            }
+        )
+    }
+
+    const nodeMailerRes: any = await transporter.sendMail(mailOptions);
+
+    if (nodeMailerRes) {
+        return {
+            flag: true,
+            message: nodeMailerRes.response
+        }
+    }
+    return { flag: false }
 
 }

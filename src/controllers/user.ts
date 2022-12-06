@@ -23,7 +23,7 @@ export const SignupUser = async (req: any, res: Response) => {
                         const token = await geneTokens({ _id: result?._id.toString() });
                         const otp = Math.floor(1000 + Math.random() * 9000);
 
-                        await models?.Otps.create({ userId: result?._id, mobile, otp, messageFor: "User sign up code" })
+                        await models?.Otps.create({ userId: result?._id, mobile, email, otp, messageFor: "User sign up code" })
                         delete result?._doc?.password;
                         delete result?._doc?.isDeleted;
                         delete result?._doc?.isAdmin;
@@ -93,13 +93,12 @@ export const LoginWithOtp = async (req: any, res: Response) => {
                 if (!resultRes) {
                     sendResponse(res, 400, { message: "Entre a valid otp" });
                 } else {
-                    // await models?.Otps.findByIdAndUpdate({ _id: result?._id }, { isDeleted: true })
+                    await models?.Otps.findByIdAndUpdate({ _id: resultRes?._id }, { isDeleted: true })
                     const token = await geneTokens({ _id: resultRes?.userId?._id.toString() });
                     let userData = resultRes?._doc?.userId;
                     delete userData?.password;
                     delete userData?.isDeleted;
                     delete userData?.isAdmin;
-                    console.log('🚀 ~ file: user.ts ~ line 106 ~ awaitmodels?.Otps.findOne ~ userData', userData);
                     sendResponse(res, 200, { data: userData, token });
 
                 }
@@ -223,6 +222,64 @@ export const savePassword = async (req: any, res: Response) => {
                 sendResponse(res, 200, { data: true })
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error.message })
+            })
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
+
+export const SocialSignup = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+            const { userName, email, mobile } = req?.body;
+            await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (resp: any) => {
+                if (resp) sendResponse(res, 200, { message: "User is exist" });
+                else {
+                    await models?.User.create(req?.body).then(async (result: any) => {
+                        const token = await geneTokens({ _id: result?._id.toString() });
+
+                        delete result?._doc?.password;
+                        delete result?._doc?.isDeleted;
+                        delete result?._doc?.isAdmin;
+                        sendResponse(res, 201, { data: result, token });
+                    }).catch((error: any) => {
+                        sendResponse(res, 401, { message: error?.message });
+                    })
+                }
+
+            }).catch((error: any) => {
+                sendResponse(res, 401, { message: error?.message });
+            })
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
+
+export const SocialLogin = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+
+            const { userName, email, mobile } = req?.body;
+            await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (result: any) => {
+                if (result) sendResponse(res, 200, { message: "User is exist" });
+                else {
+                    const token = await geneTokens({ _id: result?._id.toString() });
+
+                    delete result?._doc?.password;
+                    delete result?._doc?.isDeleted;
+                    delete result?._doc?.isAdmin;
+                    sendResponse(res, 201, { data: result, token });
+                }
+
+            }).catch((error: any) => {
+                sendResponse(res, 401, { message: error?.message });
             })
 
         } else {

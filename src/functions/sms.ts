@@ -8,8 +8,10 @@ export const sendMessage = (numbersList: any, otp: number) => {
             message: `Your MenOnline verification code is ${otp}. Please do not share it with anybody`,
             numbers: numbersList
         }
-
         fast2sms.sendMessage(options).then((result: any) => {
+
+
+
             reject(result)
         }).catch((error: any) => {
             resolve(error)

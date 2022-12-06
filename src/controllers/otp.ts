@@ -40,9 +40,18 @@ export const createOtp = async (req: any, res: Response) => {
                         sendResponse(res, 200, { data: true, resResult });
                     } else {
                         const otp = Math.floor(1000 + Math.random() * 9000);
-                        await models?.Otps.create({ userId: userRes?._id, $or: [{ mobile }, { email }], otp, messageFor }).then(async (result: any) => {
+                        req.body.userId = userRes?._id;
+                        req.body.otp = otp;
+                        await models?.Otps.create(req.body).then(async (result: any) => {
+                            if (email) {
+                                const obj: any = {
+                                    name: email,
+                                    otp,
+                                    propose: "Account verification code"
+                                }
+                                sendEmail(email, "Login", obj)
+                            }
                             // await sendMessage(mobile, otp);
-                            await sendEmail([email], 'Login otp', 'sddf');
                             sendResponse(res, 200, { data: true, result });
                         }).catch((error: any) => {
                             sendResponse(res, 400, { message: error.message });
