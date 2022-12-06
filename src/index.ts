@@ -23,6 +23,11 @@ app.use('/otp', Routes?.otpRouter);
 app.use('/address', Routes?.addressRouter);
 app.use('/serviceAreas', Routes?.serviceAreasRouter);
 app.use('/blog', Routes?.blogRouter);
+app.use('/category', Routes?.categoryRouter);
+app.use('/order', Routes?.orderRouter);
+app.use('/request', Routes?.requestRouter);
+app.use('/subCategory', Routes?.subCategoryRouter);
+app.use('/workHistory', Routes?.workHistoryRouter);
 
 sendMessageFun
 
