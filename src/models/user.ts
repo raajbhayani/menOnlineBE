@@ -14,7 +14,7 @@ const userSchema = new Schema<IUser>({
     },
     email: {
         type: String,
-        // required: [true, "Email is required"],
+        required: [true, "Email is required"],
         index: true,
         trim: true,
         lowercase: true,

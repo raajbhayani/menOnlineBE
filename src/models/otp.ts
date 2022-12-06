@@ -1,4 +1,5 @@
 import mongoose, { Schema, model, Types } from "mongoose";
+import validator from "validator";
 import { IOtp } from "../interfaces/otp";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -7,6 +8,14 @@ const otpsSchema = new Schema<IOtp>({
     userId: {
         type: ObjectId,
         ref: 'user'
+    },
+    email: {
+        type: String,
+        // required: [true, "Email is required"],
+        index: true,
+        trim: true,
+        lowercase: true,
+        validate: [validator.isEmail, "Invalid Email"],
     },
     mobile: {
         type: Number,
