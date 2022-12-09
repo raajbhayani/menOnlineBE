@@ -1,19 +1,31 @@
 import mongoose, { Schema, model, Types } from "mongoose";
+import validator from "validator";
 import { IOtp } from "../interfaces/otp";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const otpSchema = new Schema<IOtp>({
+const otpsSchema = new Schema<IOtp>({
     userId: {
         type: ObjectId,
-        required: true,
         ref: 'user'
+    },
+    email: {
+        type: String,
+        // required: [true, "Email is required"],
+        index: true,
+        trim: true,
+        lowercase: true,
+        validate: [validator.isEmail, "Invalid Email"],
+    },
+    mobile: {
+        type: Number,
+        required: true,
     },
     otp: {
         type: Number,
         required: true
     },
-    for: {
+    messageFor: {
         type: String,
         required: true
     },
@@ -25,5 +37,5 @@ const otpSchema = new Schema<IOtp>({
     timestamps: true
 });
 
-const Otp = model<IOtp>('otp', otpSchema);
-export default Otp
+const Otps = model<IOtp>('otps', otpsSchema);
+export default Otps

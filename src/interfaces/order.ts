@@ -3,7 +3,9 @@ import { Types, Document } from 'mongoose';
 export interface IOrder extends Document {
     by: Types.ObjectId
     to: Types.ObjectId
-    state: string
+    status: string
+    byIsConformed: boolean
+    toIsConformed: boolean
     price: number
     paymentMethod: string
     categoryId: Types.ObjectId

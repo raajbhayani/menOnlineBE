@@ -2,15 +2,15 @@ import { Request, Response } from "express";
 import models from '../models/index';
 import { sendResponse } from '../functions/sendResponse';
 
-export const addAddress = async (req: any, res: Response) => {
+export const addRequest = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
             const { _id } = req?.me;
 
-            req.body.userId = _id;
+            req.body.by = _id;
 
-            await models?.Address.create(req?.body).then((result: any) => {
+            await models?.Request.create(req?.body).then((result: any) => {
                 sendResponse(res, 201, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
@@ -24,13 +24,11 @@ export const addAddress = async (req: any, res: Response) => {
 
 }
 
-export const getAddress = async (req: any, res: Response) => {
+export const getRequest = async (req: any, res: Response) => {
     try {
 
-        const { _id } = req?.me;
-
-        await models?.Address.find({ userId: _id, isDeleted: false }).then((result: any) => {
-            sendResponse(res, 201, { data: result });
+        await models?.Request.find({}).then((result: any) => {
+            sendResponse(res, 200, { data: result });
         }).catch((error: any) => {
             sendResponse(res, 400, { message: error?.message });
         })
@@ -40,19 +38,18 @@ export const getAddress = async (req: any, res: Response) => {
     }
 }
 
-export const upDateAddress = async (req: any, res: Response) => {
+export const updateRequest = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id } = req?.me;
+            const { _id } = req?.body;
 
-            req.body.userId = _id;
-
-            await models?.Address.findOneAndUpdate({ _id: req?.body?._id, userId: _id, isDeleted: false }, req?.body, { new: true }).then((result: any) => {
-                sendResponse(res, 201, { data: result });
+            await models?.Request.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
+                sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
             })
+
         } else {
             sendResponse(res, 400, { message: "Enter a required fields" });
         }
@@ -61,17 +58,21 @@ export const upDateAddress = async (req: any, res: Response) => {
     }
 }
 
-export const deleteAddress = async (req: any, res: Response) => {
+export const deleteRequest = async (req: any, res: Response) => {
     try {
-        const { _id } = req?.me;
+        if (Object.keys(req?.body).length > 0) {
 
-        req.body.userId = _id;
+            const { _id } = req?.body;
 
-        await models?.Address.findOneAndUpdate({ _id: req?.params?.id, userId: _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
-            sendResponse(res, 201, { message: true });
-        }).catch((error: any) => {
-            sendResponse(res, 400, { message: error?.message });
-        })
+            await models?.Request.findOneAndUpdate({ _id, isDeleted: false }, { isDeleted: true }).then((result: any) => {
+                sendResponse(res, 200, { data: result });
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

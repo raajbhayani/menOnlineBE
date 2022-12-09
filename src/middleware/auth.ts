@@ -10,7 +10,7 @@ export const authUsers = async (req: any, res: Response, next: NextFunction) => 
             if (decoded) {
                 await model?.User.findOne({ _id: decoded?._id, $or: [{ role: "user" }, { role: "admin" }], isDeleted: false }).then((result: any) => {
                     if (result) {
-                        req.userData = result;
+                        req.me = result;
                         next();
                     } else {
                         sendResponse(res, 401, { message: "Unauthorized" });
@@ -40,7 +40,7 @@ export const authAdmin = async (req: any, res: Response, next: NextFunction) => 
             if (decoded) {
                 await model?.User.findOne({ _id: decoded?._id, isAdmin: true, role: 'admin', isDeleted: false }).then((result: any) => {
                     if (result) {
-                        req.userData = result;
+                        req.me = result;
                         next();
                     } else {
                         sendResponse(res, 401, { message: "Unauthorized" });
@@ -68,7 +68,7 @@ export const authLabour = async (req: any, res: Response, next: NextFunction) =>
             if (decoded) {
                 await model?.User.findOne({ _id: decoded?._id, $or: [{ role: 'labour' }, { role: "admin" }], isDeleted: false }).then((result: any) => {
                     if (result) {
-                        req.userData = result;
+                        req.me = result;
                         next();
                     } else {
                         sendResponse(res, 401, { message: "Unauthorized" });
@@ -96,7 +96,7 @@ export const authContractor = async (req: any, res: Response, next: NextFunction
             if (decoded) {
                 await model?.User.findOne({ _id: decoded?._id, $or: [{ role: 'contractor' }, { role: "admin" }], isDeleted: false }).then((result: any) => {
                     if (result) {
-                        req.userData = result;
+                        req.me = result;
                         next();
                     } else {
                         sendResponse(res, 401, { message: "Unauthorized" });
@@ -124,7 +124,7 @@ export const authGeneral = async (req: any, res: Response, next: NextFunction) =
             if (decoded) {
                 await model?.User.findOne({ _id: decoded?._id, isDeleted: false }).then((result: any) => {
                     if (result) {
-                        req.userData = result;
+                        req.me = result;
                         next();
                     } else {
                         sendResponse(res, 401, { message: "Unauthorized" });

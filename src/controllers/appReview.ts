@@ -5,9 +5,9 @@ import models from '../models/index';
 export const addAppReviews = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
-            await models.AppReview.create({ ...req?.body }).then((result: any) => {
+            await models.AppReview.create(req?.body).then((result: any) => {
 
                 sendResponse(res, 201, { data: result });
             }).catch((error: any) => {
@@ -15,7 +15,7 @@ export const addAppReviews = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Data is not available" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
@@ -25,9 +25,9 @@ export const addAppReviews = async (req: any, res: Response) => {
 export const updateAppReviews = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
-            const { _id } = req?.user;
+            const { _id } = req?.me;
 
-            await models.AppReview.create({ _id: req?.body?._id, isDeleted: false }, { ...req?.body }, { new: true }).then((result: any) => {
+            await models.AppReview.create({ _id: req?.body?._id, isDeleted: false }, req?.body, { new: true }).then((result: any) => {
 
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
@@ -35,7 +35,7 @@ export const updateAppReviews = async (req: any, res: Response) => {
             })
 
         } else {
-            sendResponse(res, 400, { message: "Data is not available" });
+            sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

@@ -3,7 +3,7 @@ import { IReview } from "../interfaces/review";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const otpSchema = new Schema<IReview>({
+const reviewSchema = new Schema<IReview>({
     userId: {
         type: ObjectId,
         required: true,
@@ -25,5 +25,5 @@ const otpSchema = new Schema<IReview>({
     timestamps: true
 });
 
-const Otp = model<IReview>('otp', otpSchema);
-export default Otp
+const Review = model<IReview>('review', reviewSchema);
+export default Review

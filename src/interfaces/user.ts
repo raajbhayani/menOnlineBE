@@ -20,8 +20,10 @@ export interface IUser {
     workImage: Array<{ img: string, location: string, userId: string, comment: string, createdAt: Date }>
     language: string
     isNeeded: boolean
+    isValid: boolean
     needsCategoryId: string[]
     needsLocationId: string[]
+    isKyc: boolean
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date

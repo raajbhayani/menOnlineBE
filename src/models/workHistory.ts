@@ -1,9 +1,9 @@
 import mongoose, { Schema, model, Types } from "mongoose";
-import { IOtp } from "../interfaces/otp";
+import { IWorkHistory } from "../interfaces/workHistory";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const otpSchema = new Schema<IOtp>({
+const workHistorySchema = new Schema<IWorkHistory>({
     userId: {
         type: ObjectId,
         required: true,
@@ -31,5 +31,5 @@ const otpSchema = new Schema<IOtp>({
     timestamps: true
 });
 
-const Otp = model<IOtp>('otp', otpSchema);
-export default Otp
+const WorkHistory = model<IWorkHistory>('workHistory', workHistorySchema);
+export default WorkHistory
