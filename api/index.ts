@@ -1,15 +1,15 @@
 import express, { Request, Response } from "express";
 import morgan from 'morgan';
 import * as dotenv from 'dotenv';
-import { connectDB } from "./Database";
+import { connectDB } from "../src/Database";
 dotenv.config();
 import cors from "cors";
 import bodyParser from "body-parser";
-import models from "./models/index";
-import Routes from "./routes/index";
-import Socket from "./socket/socket";
-import { sendEmail } from "./functions/emailService";
-import { sendMessage } from "./functions/sms";
+import models from "../src/models/index";
+import Routes from "../src/routes/index";
+import Socket from "../src/socket/socket";
+import { sendEmail } from "../src/functions/emailService";
+import { sendMessage } from "../src/functions/sms";
 
 const app = express();
 app.use(bodyParser.json());
@@ -38,7 +38,7 @@ app.get('/', async (req: Request, res: Response) => {
     // const data: any = sendEmail(name, 'Login', obj);
     // sendMessage([9925185934], 1234);
     res.json({
-        status: "Ok home",
+        status: "Ok",
         // data
     })
 });
