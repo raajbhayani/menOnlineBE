@@ -10,7 +10,7 @@ export const connectSocketServer = async (server: any) => {
         try {
             const token = socket.handshake.query.token;
             jwt.verify(token, process.env.JWT_PRIVATE_KEY || 'manOnline8080', async (err: any, decoded: any) => {
-                if (err) throw err.message;
+                if (err) console.log("error", err.message);
                 await models?.User.findOne({ _id: decoded?._id, isDeleted: false }).then((result: any) => {
                     if (result) {
                         socket.userId = result;
@@ -21,7 +21,6 @@ export const connectSocketServer = async (server: any) => {
                 }).catch((error: any) => {
                     io.sockets.to(socket.id).emit("auth", { message: "user not found" })
                 })
-
             });
         } catch (error: any) {
             console.log(error.message);

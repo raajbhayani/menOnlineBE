@@ -4,15 +4,15 @@ import * as dotenv from 'dotenv';
 import { connectDB } from "./Database";
 dotenv.config();
 import cors from "cors";
+import bodyParser from "body-parser";
 import models from "./models/index";
 import Routes from "./routes/index";
 import Socket from "./socket/socket";
-import { sendMessageFun } from "./controllers/otp";
 import { sendEmail } from "./functions/emailService";
 import { sendMessage } from "./functions/sms";
-// import fast2sms from 'fast-two-sms';
 
 const app = express();
+app.use(bodyParser.json());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 app.use(morgan('dev'));
@@ -29,16 +29,14 @@ app.use('/request', Routes?.requestRouter);
 app.use('/subCategory', Routes?.subCategoryRouter);
 app.use('/workHistory', Routes?.workHistoryRouter);
 
-sendMessageFun
-
 app.get('/', async (req: Request, res: Response) => {
-    const name: string = 'rajbhayani.scaleteam@gmail.com';
-    const obj: any = {
-        name,
-        otp: "7895",
-    }
+    // const name: string = 'rajbhayani.scaleteam@gmail.com';
+    // const obj: any = {
+    //     name,
+    //     otp: "7895",
+    // }
     // const data: any = sendEmail(name, 'Login', obj);
-    sendMessage([9925185934], 1234);
+    // sendMessage([9925185934], 1234);
     res.json({
         status: "Ok",
         // data
@@ -52,7 +50,7 @@ connectDB().then(() => {
 })
 
 const server = app.listen(process.env.PORT, () => {
-    console.log(`Example app listening on port ${process.env.PORT}`)
+    console.log(`Men online app listening on port ${process.env.PORT}`)
 })
 
 Socket.connectSocketServer(server);

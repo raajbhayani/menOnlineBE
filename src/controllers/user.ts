@@ -236,7 +236,7 @@ export const SocialSignup = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
             const { userName, email, mobile } = req?.body;
-            await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (resp: any) => {
+            await models?.User.findOne({ $and: [{ userName }, { email }] }).then(async (resp: any) => {
                 if (resp) sendResponse(res, 200, { message: "User is exist" });
                 else {
                     await models?.User.create(req?.body).then(async (result: any) => {
@@ -267,7 +267,8 @@ export const SocialLogin = async (req: any, res: Response) => {
         if (Object.keys(req?.body).length > 0) {
 
             const { userName, email, mobile } = req?.body;
-            await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (result: any) => {
+            sendResponse(res, 201, { data: req?.body });
+            await models?.User.findOne({ $and: [{ userName }, { email }] }).then(async (result: any) => {
                 if (result) sendResponse(res, 200, { message: "User is exist" });
                 else {
                     const token = await geneTokens({ _id: result?._id.toString() });

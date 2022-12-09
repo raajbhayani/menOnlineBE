@@ -33,7 +33,7 @@ export const getCategory = async (req: any, res: Response) => {
 
             const { page, limit } = req?.body;
 
-            await models?.Category.find().sort({ _id: -1 }).limit(limit * 1)
+            await models?.Category.find({}).sort({ _id: -1 }).limit(limit * 1)
                 .skip((page - 1) * limit).then((result: any) => {
                     sendResponse(res, 200, { data: result });
                 }).catch((error: any) => {

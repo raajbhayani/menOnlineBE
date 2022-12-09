@@ -6,7 +6,7 @@ import { sendMessage } from "../functions/sms"
 import { sendEmail } from "../functions/emailService";
 
 
-export const sendMessageFun = (mobile: number, messageFor: string) => {
+export const sendMessageFun = async (mobile: number, messageFor: string) => {
     return new Promise(async (resolve, reject) => {
         await models?.User.findOne({ mobile, isDeleted: false }).then(async (userRes: any) => {
             if (!userRes) reject({ status: 401, data: "Unauthorized" });
