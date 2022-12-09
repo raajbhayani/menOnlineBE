@@ -38,7 +38,7 @@ app.get('/', async (req: Request, res: Response) => {
     // const data: any = sendEmail(name, 'Login', obj);
     // sendMessage([9925185934], 1234);
     res.json({
-        status: "Ok",
+        status: "Ok home",
         // data
     })
 });
