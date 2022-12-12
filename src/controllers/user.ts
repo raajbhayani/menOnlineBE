@@ -235,9 +235,10 @@ export const savePassword = async (req: any, res: Response) => {
 export const SocialSignup = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
-            const { userName, email, mobile } = req?.body;
+            const { userName, email } = req?.body;
+            console.log('🚀 ~ file: user.ts:239 ~ SocialSignup ~ req?.body', req?.body);
             await models?.User.findOne({ $and: [{ userName }, { email }] }).then(async (resp: any) => {
-                if (resp) sendResponse(res, 200, { message: "User is exist" });
+                if (resp) sendResponse(res, 400, { message: "User is exist" });
                 else {
                     await models?.User.create(req?.body).then(async (result: any) => {
                         const token = await geneTokens({ _id: result?._id.toString() });
@@ -266,17 +267,17 @@ export const SocialLogin = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { userName, email, mobile } = req?.body;
-            sendResponse(res, 201, { data: req?.body });
-            await models?.User.findOne({ $and: [{ userName }, { email }] }).then(async (result: any) => {
-                if (result) sendResponse(res, 200, { message: "User is exist" });
+            const { email } = req?.body;
+
+            await models?.User.findOne({ email }).then(async (result: any) => {
+                if (!result) sendResponse(res, 400, { message: "User is exist" });
                 else {
                     const token = await geneTokens({ _id: result?._id.toString() });
 
                     delete result?._doc?.password;
                     delete result?._doc?.isDeleted;
                     delete result?._doc?.isAdmin;
-                    sendResponse(res, 201, { data: result, token });
+                    sendResponse(res, 200, { data: result, token });
                 }
 
             }).catch((error: any) => {
