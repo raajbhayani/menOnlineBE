@@ -30,11 +30,7 @@ app.use('/subCategory', Routes?.subCategoryRouter);
 app.use('/workHistory', Routes?.workHistoryRouter);
 
 app.get('/', async (req: Request, res: Response) => {
-<<<<<<< HEAD:api/index.ts
-    // const name: string = 'rajbhayani.scaleteam@gmail.com';
-=======
     // const name: string = 'rajbhayani4@gmail.com';
->>>>>>> dev:src/index.ts
     // const obj: any = {
     //     name,
     //     otp: "7895",
