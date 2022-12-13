@@ -270,7 +270,7 @@ export const SocialLogin = async (req: any, res: Response) => {
             const { email } = req?.body;
 
             await models?.User.findOne({ email }).then(async (result: any) => {
-                if (!result) sendResponse(res, 400, { message: "User is exist" });
+                if (!result) sendResponse(res, 400, { message: "User is not exist" });
                 else {
                     const token = await geneTokens({ _id: result?._id.toString() });
 
