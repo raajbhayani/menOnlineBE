@@ -19,7 +19,6 @@ const otpsSchema = new Schema<IOtp>({
     },
     mobile: {
         type: Number,
-        required: true,
     },
     otp: {
         type: Number,
