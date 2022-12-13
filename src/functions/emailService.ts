@@ -20,7 +20,7 @@ export const sendEmail = async (user: any, emailFlag: string, obj: any) => {
         to: string
         subject: string
         test: string
-        html: string
+        html: any
     }
     const mailOptions: any = {
         from: process.env.EMAIL_USERNAME,
@@ -36,8 +36,8 @@ export const sendEmail = async (user: any, emailFlag: string, obj: any) => {
             { name, otp, propose },
             (err, data) => {
                 if (err) console.log("Error :", err);
-                mailOptions["subject"] = "Email Verification";
-                mailOptions["html"] = data;
+                mailOptions.subject = "Email Verification";
+                mailOptions.html = data;
             }
         )
     }
@@ -49,8 +49,8 @@ export const sendEmail = async (user: any, emailFlag: string, obj: any) => {
             { name, otp, propose },
             (err, data) => {
                 if (err) console.log("Error :", err);
-                mailOptions["subject"] = "Email Verification";
-                mailOptions["html"] = data;
+                mailOptions.subject = "Email Verification";
+                mailOptions.html = data;
             }
         )
     }

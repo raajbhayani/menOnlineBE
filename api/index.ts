@@ -30,16 +30,19 @@ app.use('/subCategory', Routes?.subCategoryRouter);
 app.use('/workHistory', Routes?.workHistoryRouter);
 
 app.get('/', async (req: Request, res: Response) => {
-    // const name: string = 'rajbhayani.scaleteam@gmail.com';
-    // const obj: any = {
-    //     name,
-    //     otp: "7895",
-    // }
-    // const data: any = sendEmail(name, 'Login', obj);
+    const name: string = 'rajbhayani.scaleteam@gmail.com';
+    const obj: any = {
+        name,
+        otp: "7895",
+        propose: "Account verification code"
+    }
+    let data: any;
+    sendEmail(name, 'Login', obj).then((res: any) => data = res).catch((error: any) => data = error.message)
+    console.log("🚀 ~ file: index.ts:47 ~ app.get ~ data", data)
     // sendMessage([9925185934], 1234);
     res.json({
         status: "Ok",
-        // data
+        data: data
     })
 });
 
@@ -54,4 +57,3 @@ const server = app.listen(process.env.PORT, () => {
 })
 
 Socket.connectSocketServer(server);
-

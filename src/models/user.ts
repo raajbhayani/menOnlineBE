@@ -33,8 +33,7 @@ const userSchema = new Schema<IUser>({
         default: "male"
     },
     mobile: {
-        type: Number,
-        required: true,
+        type: Number
     },
     address: {
         type: String
