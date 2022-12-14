@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { geneTokens } from "../functions/JwtToken";
 import fs from "fs";
 import { fileUpload } from "../functions/fileUpload"
+import { sendEmail } from "../functions/emailService";
 
 
 export const SignupUser = async (req: any, res: Response) => {
@@ -12,10 +13,10 @@ export const SignupUser = async (req: any, res: Response) => {
     const { userName, email, mobile } = req?.body;
 
     try {
-        if (Object.keys(req?.body).length > 0 && req?.body?.mobile.toString().length == 10) {
+        if (Object.keys(req?.body).length > 0) {
 
-            await models?.User.findOne({ $and: [{ userName }, { email }, { mobile }] }).then(async (resp: any) => {
-                if (resp) sendResponse(res, 200, { message: "User is exist" });
+            await models?.User.findOne({ $and: [{ userName: userName }, { email: email }, { mobile: mobile }] }).then(async (resp: any) => {
+                if (resp) sendResponse(res, 400, { message: "User is exist" });
                 else {
                     req?.body?.avatar && (req.body.avatar = await fileUpload(req?.body?.avatar));
 
@@ -23,7 +24,13 @@ export const SignupUser = async (req: any, res: Response) => {
                         const token = await geneTokens({ _id: result?._id.toString() });
                         const otp = Math.floor(1000 + Math.random() * 9000);
 
-                        await models?.Otps.create({ userId: result?._id, mobile, email, otp, messageFor: "User sign up code" })
+                        await models?.Otps.create({ userId: result?._id, email: email, otp, messageFor: "User sign up code" })
+                        const obj: any = {
+                            name: email,
+                            otp,
+                            propose: "User sign up code"
+                        }
+                        sendEmail(email, "Verification", obj)
                         delete result?._doc?.password;
                         delete result?._doc?.isDeleted;
                         delete result?._doc?.isAdmin;
@@ -40,6 +47,7 @@ export const SignupUser = async (req: any, res: Response) => {
             sendResponse(res, 400, { message: "Enter a required fields" });
         }
     } catch (error: any) {
+        console.log('🚀 ~ file: user.ts:52 ~ SignupUser ~ error', error);
         sendResponse(res, 400, { message: error?.message });
     }
 }
