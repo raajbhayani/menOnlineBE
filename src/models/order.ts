@@ -34,7 +34,7 @@ const orderSchema = new Schema<IOrder>({
     },
     categoryId: {
         type: ObjectId,
-        ref: "subCategory",
+        ref: "category",
         required: true,
     },
     rate: {

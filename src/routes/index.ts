@@ -5,8 +5,7 @@ import serviceAreasRouter from "./serviceAreas";
 import blogRouter from "./blog";
 import categoryRouter from "./category";
 import orderRouter from "./order";
-import requestRouter from "./request";
-import subCategoryRouter from "./subCategory";
+import requestRouter from "./request";;
 import workHistoryRouter from "./workHistory";
 
 export default {
@@ -18,6 +17,5 @@ export default {
     categoryRouter,
     orderRouter,
     requestRouter,
-    subCategoryRouter,
     workHistoryRouter
 }

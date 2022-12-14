@@ -6,7 +6,6 @@ import Otps from "./otp";
 import Request from "./request";
 import AppReview from "./appReview";
 import ServiceAreas from "./serviceAreas";
-import Subscription from "./subCategory";
 import User from "./user";
 import Review from "./review";
 import WorkHistory from "./workHistory"
@@ -20,7 +19,6 @@ export default {
     Request,
     AppReview,
     ServiceAreas,
-    Subscription,
     User,
     Otps,
     Review
