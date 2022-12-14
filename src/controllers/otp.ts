@@ -34,12 +34,19 @@ export const createOtp = async (req: any, res: Response) => {
         const { mobile, email, messageFor } = req?.body;
         console.log("🚀 ~ file: otp.ts:35 ~ createOtp ~ req?.body", req?.body)
         await models?.User.findOne({ $or: [{ mobile }, { email }], isDeleted: false }).then(async (userRes: any) => {
-            console.log("🚀 ~ file: otp.ts:37 ~ awaitmodels?.User.findOne ~ userRes", userRes)
             if (!userRes) sendResponse(res, 401, { data: "Unauthorized" });
             else {
                 await models?.Otps.findOne({ userId: userRes?._id, $or: [{ mobile }, { email }], isDeleted: false }).then(async (resResult: any) => {
                     if (resResult) {
-                        sendResponse(res, 200, { data: true, resResult });
+                        if (email) {
+                            const obj: any = {
+                                name: email,
+                                otp: resResult?.otp,
+                                propose: "Account verification code"
+                            }
+                            sendEmail(email, "Login", obj)
+                        }
+                        sendResponse(res, 200, { data: true });
                     } else {
                         const otp = Math.floor(1000 + Math.random() * 9000);
                         req.body.userId = userRes?._id;
@@ -54,7 +61,7 @@ export const createOtp = async (req: any, res: Response) => {
                                 sendEmail(email, "Login", obj)
                             }
                             // await sendMessage(mobile, otp);
-                            sendResponse(res, 200, { data: true, result });
+                            sendResponse(res, 200, { data: true });
                         }).catch((error: any) => {
                             sendResponse(res, 400, { message: error.message });
                         })

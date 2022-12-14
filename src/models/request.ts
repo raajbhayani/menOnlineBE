@@ -20,7 +20,7 @@ const requestSchema = new Schema<IRequest>({
     categoryId: {
         type: ObjectId,
         required: true,
-        ref: "subCategory"
+        ref: "category"
     },
     price: {
         type: Number

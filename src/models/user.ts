@@ -73,7 +73,7 @@ const userSchema = new Schema<IUser>({
     },
     needsCategoryId: [{
         type: ObjectId,
-        ref: "subCategory"
+        ref: "category"
     }],
     needsLocationId: [{
         type: ObjectId,
