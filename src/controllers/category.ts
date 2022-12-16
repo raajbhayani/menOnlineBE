@@ -10,7 +10,7 @@ export const addCategory = async (req: any, res: Response) => {
 
             const { img, icon } = req?.body;
 
-            img && (req.body.img = await fileUpload(img));
+            // img && (req.body.img = await fileUpload(img));
             icon && (req.body.icon = await fileUpload(icon));
 
             await models?.Category.create(req?.body).then((result: any) => {
@@ -53,7 +53,7 @@ export const updateCategory = async (req: any, res: Response) => {
 
             const { _id, img, icon } = req?.body;
 
-            img && (req.body.img = await fileUpload(img));
+            // img && (req.body.img = await fileUpload(img));
             icon && (req.body.icon = await fileUpload(icon));
 
             await models?.Category.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {

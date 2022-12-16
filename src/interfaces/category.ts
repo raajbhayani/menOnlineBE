@@ -6,7 +6,7 @@ export interface ICategory extends Document {
     traded: number
     index: number
     trandedIndex: number
-    img: string
+    img: string[]
     icon: string
     isDeleted: boolean
     createAt: Date

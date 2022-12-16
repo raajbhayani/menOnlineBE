@@ -19,9 +19,9 @@ const categorySchema = new Schema<ICategory>({
     trandedIndex: {
         type: Number
     },
-    img: {
+    img: [{
         type: String
-    },
+    }],
     icon: {
         type: String
     },
