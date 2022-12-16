@@ -89,3 +89,28 @@ export const deleteCategory = async (req: any, res: Response) => {
         sendResponse(res, 400, { message: error?.message });
     }
 }
+
+export const categorySearch = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+            const { search } = req?.body;
+            const searchText = search.split(" ");
+            const searchArray: any = [];
+
+            for (let i in searchText) {
+                searchArray.push({ name: { $regex: searchText[i], $options: 'i' }, description: { $regex: searchText[i], $options: 'i' } });
+            }
+
+            await models?.Category.find({ $and: searchArray }).then((result: any) => {
+                sendResponse(res, 200, { data: result });
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+        sendResponse(res, 400, { message: error?.message });
+    }
+}
