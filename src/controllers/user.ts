@@ -300,3 +300,55 @@ export const SocialLogin = async (req: any, res: Response) => {
     }
 }
 
+export const getLabourContractorList = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+
+            const { id, page, limit } = req?.body;
+
+            let aggregation: any = [];
+
+            aggregation.push({
+                $match: { needsCategoryId: { $in: [id] } }
+            });
+
+            aggregation.push({
+                $sample: { size: limit }
+            });
+
+            await models?.User.aggregate(aggregation).limit(limit * 1)
+                .skip((page - 1) * limit).then((result: any) => {
+                    sendResponse(res, 200, { data: result });
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error?.message });
+                })
+
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+
+    }
+}
+
+
+export const saveUser = async (req: any, res: Response) => {
+    try {
+        if (Object.keys(req?.body).length > 0) {
+
+            const User: any = models?.User;
+
+            const userData: any = new User(req?.body)
+
+            await userData.save().then((res: any) => {
+
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error.message });
+            })
+        } else {
+            sendResponse(res, 400, { message: "Enter a required fields" });
+        }
+    } catch (error: any) {
+
+    }
+}
