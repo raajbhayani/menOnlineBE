@@ -26,6 +26,4 @@ router.post('/savePassword', authGeneral, savePassword);
 router.post('/saveUser', saveUser);
 
 
-
-
 export default router;

@@ -32,6 +32,14 @@ export const connectSocketServer = async (server: any) => {
         await models?.User.findOneAndUpdate({ _id }, { socketId: socket.id })
         console.log('🚀 ~ file: socket.ts ~ line 32 ~ io.on ~ socket', socket.id);
     })
+
+
+
+    // io.on("disconnect", async (socket: any) => {
+    //     await models?.User.findOne({})
+    //     console.log(socket.id);
+    // });
+
 }
 
 export default { connectSocketServer }

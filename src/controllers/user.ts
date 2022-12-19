@@ -60,7 +60,7 @@ export const Login = async (req: any, res: Response) => {
             const password: string = req?.body?.password;
             delete req?.body?.password;
 
-            await models?.User.findOne({ ...req.body, isDeleted: false }).then(async (result: any) => {
+            await models?.User.findOne({ ...req.body, isDeleted: false }).populate("needsCategoryId", "needsLocationId").then(async (result: any) => {
                 if (result) {
                     const isValid = await bcrypt?.compare(password, result?.password);
                     if (isValid) {
@@ -316,6 +316,24 @@ export const getLabourContractorList = async (req: any, res: Response) => {
                 $sample: { size: limit }
             });
 
+            aggregation.push({
+                $lookup: {
+                    from: "category",
+                    localField: "needsCategoryId",
+                    foreignField: "_id",
+                    as: "needsCategoryId"
+                }
+            })
+
+            aggregation.push({
+                $lookup: {
+                    from: "serviceAreas",
+                    localField: "needsLocationId",
+                    foreignField: "_id",
+                    as: "needsLocationId"
+                }
+            })
+
             await models?.User.aggregate(aggregation).limit(limit * 1)
                 .skip((page - 1) * limit).then((result: any) => {
                     sendResponse(res, 200, { data: result });
@@ -330,7 +348,6 @@ export const getLabourContractorList = async (req: any, res: Response) => {
 
     }
 }
-
 
 export const saveUser = async (req: any, res: Response) => {
     try {

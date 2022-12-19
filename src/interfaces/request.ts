@@ -6,6 +6,7 @@ export interface IRequest extends Document {
     status: string
     categoryId: Types.ObjectId
     price: number
+    date: number
     isDeleted: boolean
     createAt: Date
     updatedAt: Date
