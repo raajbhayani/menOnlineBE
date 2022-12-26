@@ -29,19 +29,15 @@ export const addCategory = async (req: any, res: Response) => {
 
 export const getCategory = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
 
-            const { page, limit } = req?.body;
+        const { page, limit } = req?.params;
 
-            await models?.Category.find({}).sort({ _id: -1 }).limit(limit * 1)
-                .skip((page - 1) * limit).then((result: any) => {
-                    sendResponse(res, 200, { data: result });
-                }).catch((error: any) => {
-                    sendResponse(res, 400, { message: error?.message });
-                })
-        } else {
-            sendResponse(res, 400, { message: "Enter a required fields" });
-        }
+        await models?.Category.find({ isDelete: false }).sort({ index: -1 }).limit(limit * 1)
+            .skip((page - 1) * limit).then((result: any) => {
+                sendResponse(res, 200, { data: result });
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

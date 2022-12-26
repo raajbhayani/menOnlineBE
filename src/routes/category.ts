@@ -7,7 +7,7 @@ router.post('/add', authAdmin, addCategory);
 
 router.post('/search', categorySearch);
 
-router.post('/get', getCategory);
+router.get('/get/:page/:limit', getCategory);
 
 router.put('/update', authAdmin, updateCategory);
 
