@@ -22,6 +22,9 @@ const requestSchema = new Schema<IRequest>({
         required: true,
         ref: "category"
     },
+    date: {
+        type: Number
+    },
     price: {
         type: Number
     },
