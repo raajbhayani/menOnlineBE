@@ -64,12 +64,10 @@ export const Login = async (req: any, res: Response) => {
                 if (result) {
                     const isValid = await bcrypt?.compare(password, result?.password);
                     if (isValid) {
-
                         const token = await geneTokens({ _id: result?._id.toString() });
                         delete result?._doc?.password;
                         delete result?._doc?.isDeleted;
                         delete result?._doc?.isAdmin;
-
                         sendResponse(res, 200, { data: result, token });
                     } else {
                         sendResponse(res, 400, { message: "Password is incorrect" });

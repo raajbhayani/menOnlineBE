@@ -38,6 +38,10 @@ export const connectSocketServer = async (server: any) => {
             console.log("🚀 ~ file: socket.ts:38 ~ socket.on ~ data", data)
         })
 
+        socket.on('createRequest', (data: any) => {
+            
+        })
+
     });
 
     io.on("disconnect", async (socket: any) => {

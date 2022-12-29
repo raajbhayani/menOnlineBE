@@ -32,12 +32,13 @@ export const getCategory = async (req: any, res: Response) => {
 
         const { page, limit } = req?.params;
 
-        await models?.Category.find({ isDelete: false }).sort({ index: -1 }).limit(limit * 1)
+        await models?.Category.find({ isDelete: false }).sort({ index: 1 }).limit(limit * 1)
             .skip((page - 1) * limit).then((result: any) => {
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });
             })
+
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }
@@ -47,7 +48,7 @@ export const updateCategory = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            const { _id, img, icon } = req?.body;
+            const { _id, img, icon, data } = req?.body;
 
             // img && (req.body.img = await fileUpload(img));
             icon && (req.body.icon = await fileUpload(icon));
