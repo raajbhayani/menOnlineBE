@@ -29,14 +29,14 @@ app.use('/request', Routes?.requestRouter);
 app.use('/workHistory', Routes?.workHistoryRouter);
 
 app.get('/', async (req: Request, res: Response) => {
-    const name: string = 'rajbhayani4@gmail.com';
-    const obj: any = {
-        name,
-        otp: "7895",
-        propose: "Account verification code"
-    }
-    let data: any;
-    sendEmail(name, 'Login', obj).then((res: any) => data = res).catch((error: any) => data = error.message)
+//     const name: string = '';
+//     const obj: any = {
+//         name,
+//         otp: "7895",
+//         propose: "Account verification code"
+//     }
+//     let data: any;
+//     sendEmail(name, 'Login', obj).then((res: any) => data = res).catch((error: any) => data = error.message)
     // console.log("🚀 ~ file: index.ts:47 ~ app.get ~ data", data)
     // sendMessage([9925185934], 1234);
     res.json({
