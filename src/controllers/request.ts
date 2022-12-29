@@ -26,12 +26,15 @@ export const addRequest = async (req: any, res: Response) => {
 
 export const getRequest = async (req: any, res: Response) => {
     try {
+        const { page, limit } = req?.body;
+        const { _id } = req?.me;
 
-        await models?.Request.find({}).then((result: any) => {
-            sendResponse(res, 200, { data: result });
-        }).catch((error: any) => {
-            sendResponse(res, 400, { message: error?.message });
-        })
+        await models?.Request.find({ $or: [{ by: _id }, { to: _id }] }).limit(limit * 1)
+            .skip((page - 1) * limit).then((result: any) => {
+                sendResponse(res, 200, { data: result });
+            }).catch((error: any) => {
+                sendResponse(res, 400, { message: error?.message });
+            })
 
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });

@@ -13,19 +13,15 @@ const categorySchema = new Schema<ICategory>({
     traded: {
         type: Number
     },
-    relatedServices: {
-        type: ObjectId,
-        ref: 'serviceAreas'
-    },
     index: {
         type: Number
     },
     trandedIndex: {
         type: Number
     },
-    img: {
+    img: [{
         type: String
-    },
+    }],
     icon: {
         type: String
     },

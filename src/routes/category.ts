@@ -1,15 +1,16 @@
 import express from "express";
 const router = express.Router();
 import { authUsers, authAdmin, authLabour, authContractor, authGeneral } from "../middleware/auth";
-import { addCategory, getCategory, updateCategory, deleteCategory, } from "../controllers/category";
+import { addCategory, getCategory, categorySearch, updateCategory, deleteCategory, } from "../controllers/category";
 
-router.post('/add', authGeneral, addCategory);
+router.post('/add', authAdmin, addCategory);
 
-router.post('/get', authGeneral, getCategory);
+router.post('/search', categorySearch);
 
-router.put('/update', authGeneral, updateCategory);
+router.get('/get/:page/:limit', getCategory);
 
-router.delete('/delete/:id', authGeneral, deleteCategory);
+router.put('/update', authAdmin, updateCategory);
 
+router.delete('/delete/:id', authAdmin, deleteCategory);
 
 export default router;
