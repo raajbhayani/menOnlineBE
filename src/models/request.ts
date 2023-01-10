@@ -15,7 +15,9 @@ const requestSchema = new Schema<IRequest>({
         ref: "user"
     },
     status: {
-        type: String
+        type: String,
+        default: 'pending',
+        enum: ['success', 'reject', 'pending']
     },
     categoryId: {
         type: ObjectId,

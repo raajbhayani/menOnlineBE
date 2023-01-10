@@ -32,14 +32,8 @@ export const connectSocketServer = async (server: any) => {
         const { _id }: any = socket?.me;
         await models?.User.findOneAndUpdate({ _id }, { socketId: socket.id }, { new: true })
 
-        socket.emit('sendRequest', { data: 'Send data successFully' })
-
-        socket.on('getResult', (data: any) => {
-            console.log("🚀 ~ file: socket.ts:38 ~ socket.on ~ data", data)
-        })
-
         socket.on('createRequest', (data: any) => {
-            
+            socket.emit('resendRequest', { data: "Ok" })
         })
 
     });
