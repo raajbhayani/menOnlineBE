@@ -320,35 +320,7 @@ export const getLabourContractorList = async (req: any, res: Response) => {
 
             const { id, page, limit } = req?.body;
 
-            let aggregation: any = [];
-
-            aggregation.push({
-                $match: { needsCategoryId: { $in: [id] } }
-            });
-
-            aggregation.push({
-                $sample: { size: limit }
-            });
-
-            aggregation.push({
-                $lookup: {
-                    from: "category",
-                    localField: "needsCategoryId",
-                    foreignField: "_id",
-                    as: "needsCategoryId"
-                }
-            })
-
-            aggregation.push({
-                $lookup: {
-                    from: "serviceAreas",
-                    localField: "needsLocationId",
-                    foreignField: "_id",
-                    as: "needsLocationId"
-                }
-            })
-
-            await models?.User.aggregate(aggregation).limit(limit * 1)
+            await models?.User.find({ isDeleted: false, needsCategoryId: { $in: [id] } }, { password: 0, isAdmin: 0, isDeleted: 0 }).populate(['serviceAreaId', 'needsLocationId', 'needsCategoryId']).limit(limit * 1)
                 .skip((page - 1) * limit).then((result: any) => {
                     sendResponse(res, 200, { data: result });
                 }).catch((error: any) => {
@@ -367,23 +339,23 @@ export const saveUser = async (req: any, res: Response) => {
     try {
         if (Object.keys(req?.body).length > 0) {
 
-            let User: any = models?.User, j: number = 0;
+            let User: any = models?.User;
 
-            let data = req?.body;
-            for (let i in data) {
-                const userData: any = new User(data[i])
-                await userData.save();
-                j++;
-            }
-            j == data.length && sendResponse(res, 200, { message: "Ok" })
-            // const userData: any = new User(req?.body)
-            // await userData.save()
+            // let data = req?.body;
+            // for (let i in data) {
+            //     const userData: any = new User(data[i])
+            //     await userData.save();
+            //     j++;
+            // }
+            // j == data.length && sendResponse(res, 200, { message: "Ok" })
+            const userData: any = new User(req?.body)
+            await userData.save()
 
-            // .then((res: any) => {
+                .then((res: any) => {
 
-            // }).catch((error: any) => {
-            //     sendResponse(res, 400, { message: error.message });
-            // })
+                }).catch((error: any) => {
+                    sendResponse(res, 400, { message: error.message });
+                })
         } else {
             sendResponse(res, 400, { message: "Enter a required fields" });
         }
