@@ -39,7 +39,6 @@ export const addServiceAreas = async (req: any, res: Response) => {
 export const getServiceAreas = async (req: any, res: Response) => {
     try {
         const { page, limit } = req?.params;
-        console.log('🚀 ~ file: serviceAreas.ts:42 ~ getServiceAreas ~ req?.params', req?.params);
 
         await models?.ServiceAreas.find({ isDeleted: false }).limit(limit * 1)
             .skip((page - 1) * limit).then((result: any) => {

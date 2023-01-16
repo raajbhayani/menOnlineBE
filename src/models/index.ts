@@ -8,7 +8,7 @@ import AppReview from "./appReview";
 import ServiceAreas from "./serviceAreas";
 import User from "./user";
 import Review from "./review";
-import WorkHistory from "./workHistory"
+import WorkHistory from "./workHistory";
 
 
 export default {
@@ -21,5 +21,6 @@ export default {
     ServiceAreas,
     User,
     Otps,
-    Review
+    Review,
+    WorkHistory
 }
