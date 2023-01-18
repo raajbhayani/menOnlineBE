@@ -5,7 +5,7 @@ import { addAddress, getAddress, upDateAddress, deleteAddress } from "../control
 
 router.post('/add', authGeneral, addAddress);
 
-router.get('/get/:id', authGeneral, getAddress);
+router.get('/get', authGeneral, getAddress);
 
 router.put('/update', authGeneral, upDateAddress);
 

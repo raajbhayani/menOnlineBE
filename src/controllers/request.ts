@@ -26,10 +26,10 @@ export const addRequest = async (req: any, res: Response) => {
 
 export const getRequest = async (req: any, res: Response) => {
     try {
-        const { page, limit } = req?.body;
+        const { page, limit } = req?.params;
         const { _id } = req?.me;
 
-        await models?.Request.find({ $or: [{ by: _id }, { to: _id }] }).limit(limit * 1)
+        await models?.Request.find({ $or: [{ by: _id }, { to: _id }] }).populate(["categoryId", "addressId"]).sort({ _id: -1 }).limit(limit * 1)
             .skip((page - 1) * limit).then((result: any) => {
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
@@ -47,7 +47,7 @@ export const updateRequest = async (req: any, res: Response) => {
 
             const { _id } = req?.body;
 
-            await models?.Request.findOneAndUpdate({ _id }, req?.body, { new: true }).then((result: any) => {
+            await models?.Request.findOneAndUpdate({ _id }, req?.body, { new: true }).populate(["categoryId", "addressId"]).then((result: any) => {
                 sendResponse(res, 200, { data: result });
             }).catch((error: any) => {
                 sendResponse(res, 400, { message: error?.message });

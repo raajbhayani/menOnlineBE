@@ -24,8 +24,13 @@ const requestSchema = new Schema<IRequest>({
         required: true,
         ref: "category"
     },
+    addressId: {
+        type: ObjectId,
+        required: true,
+        ref: "address"
+    },
     date: {
-        type: Number
+        type: String
     },
     price: {
         type: Number
