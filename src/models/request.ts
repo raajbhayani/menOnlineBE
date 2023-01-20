@@ -30,7 +30,7 @@ const requestSchema = new Schema<IRequest>({
         ref: "address"
     },
     date: {
-        type: String
+        type: Number
     },
     price: {
         type: Number

@@ -7,7 +7,7 @@ export interface IRequest extends Document {
     categoryId: Types.ObjectId
     addressId: Types.ObjectId
     price: number
-    date: string
+    date: number
     isDeleted: boolean
     createAt: Date
     updatedAt: Date

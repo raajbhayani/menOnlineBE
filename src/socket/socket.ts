@@ -34,13 +34,12 @@ export const connectSocketServer = async (server: any) => {
 
         socket.on('createRequest', async (data: any) => {
             data.by = _id;
-            // console.log("🚀 ~ file: socket.ts:36 ~ socket.on ~ data", data)
-            // await models?.Request.create(data).then((result: any) => {
-            //     socket.emit('resendRequest', { status: true, data: result })
-            // }).catch((error: any) => {
-            //     socket.emit('resendRequest', { status: false, message: error?.message })
-            // })
-            socket.emit('resendRequest', { status: true, data })
+            console.log("🚀 ~ file: socket.ts:36 ~ socket.on ~ data", data)
+            await models?.Request.create(data).then((result: any) => {
+                socket.emit('resendRequest', { status: true, data: result })
+            }).catch((error: any) => {
+                socket.emit('resendRequest', { status: false, message: error?.message })
+            })
         })
 
     });

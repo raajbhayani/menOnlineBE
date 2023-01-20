@@ -5,7 +5,7 @@ import { addRequest, getRequest, updateRequest, deleteRequest } from "../control
 
 router.post('/add', authGeneral, addRequest);
 
-router.post('/get/:page/:limit', authGeneral, getRequest);
+router.get('/get', authGeneral, getRequest);
 
 router.put('/update', authGeneral, updateRequest);
 
