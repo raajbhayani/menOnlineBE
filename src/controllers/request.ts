@@ -28,7 +28,7 @@ export const getRequest = async (req: any, res: Response) => {
     try {
         const { _id } = req?.me;
 
-        await models?.Request.find({ $or: [{ by: _id }, { to: _id }] }).populate(["categoryId", "addressId", "by", "to"]).sort({ _id: -1 }).then((result: any) => {
+        await models?.Request.find({ $or: [{ by: _id }, { to: _id }] }).populate(["categoryId", "addressId", "by", "to"]).sort({ _id: -1 }).then(async (result: any) => {
             sendResponse(res, 200, { data: result });
         }).catch((error: any) => {
             sendResponse(res, 400, { message: error?.message });

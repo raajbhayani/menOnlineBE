@@ -29,18 +29,28 @@ export const connectSocketServer = async (server: any) => {
     });
 
     io.on("connection", async (socket: any) => {
-        const { _id }: any = socket?.me;
+        const { _id, fullName }: any = socket?.me;
+        console.log('🚀 ~ file: socket.ts:33 ~ io.on ~ fullName', fullName, socket.id);
         await models?.User.findOneAndUpdate({ _id }, { socketId: socket.id }, { new: true })
 
         socket.on('createRequest', async (data: any) => {
             data.by = _id;
-            console.log("🚀 ~ file: socket.ts:36 ~ socket.on ~ data", data)
-            await models?.Request.create(data).then((result: any) => {
-                socket.emit('resendRequest', { status: true, data: result })
+            await models?.Request.create(data).then(async (result: any) => {
+                await models?.Request.findOne({ _id: result?._id }).populate(["categoryId", "addressId", "by", "to"]).then((res: any) => {
+                    io.sockets.to([res?.by?.socketId, res?.to?.socketId]).emit('resendRequest', { status: true, data: res });
+                })
+
             }).catch((error: any) => {
                 socket.emit('resendRequest', { status: false, message: error?.message })
             })
         })
+
+        socket.on("requestFalse", (data: any) => {
+            console.log("🚀 ~ file: socket.ts:46 ~ socket.on ~ data", data);
+            socket.emit("sendRequestFalse", data);
+        })
+
+        // io.to(this.lUserSocketId).emit(emitEventName, errPayload);
 
     });
 
