@@ -9,6 +9,7 @@ export interface IOrder extends Document {
     price: number
     paymentMethod: string
     categoryId: Types.ObjectId
+    addressId: Types.ObjectId
     rate: number
     isDeleted: boolean
     createdAt: Date

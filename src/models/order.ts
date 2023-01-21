@@ -23,6 +23,7 @@ const orderSchema = new Schema<IOrder>({
     status: {
         type: String,
         enum: ["progress", "complete"],
+        default: "progress",
         required: true
     },
     price: {
@@ -30,6 +31,7 @@ const orderSchema = new Schema<IOrder>({
     },
     paymentMethod: {
         type: String,
+        default: 'cash',
         enum: ["cash", "razorpay"],
     },
     categoryId: {
@@ -39,6 +41,10 @@ const orderSchema = new Schema<IOrder>({
     },
     rate: {
         type: Number,
+    },
+    addressId: {
+        type: ObjectId,
+        ref: "address"
     },
     isDeleted: {
         type: Boolean,

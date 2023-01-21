@@ -12,8 +12,6 @@ export const addOrder = async (req: any, res: Response) => {
             const com = async () => {
                 req.body.by = _id;
 
-                req?.body?.image && (req.body.image = await fileUpload(req?.body?.image));
-
                 await models?.Order.create(req?.body).then((result: any) => {
                     sendResponse(res, 201, { data: result });
                 }).catch((error: any) => {
@@ -38,22 +36,16 @@ export const addOrder = async (req: any, res: Response) => {
 
 export const getOrder = async (req: any, res: Response) => {
     try {
-        if (Object.keys(req?.body).length > 0) {
-            const { _id, isAdmin } = req?.me;
-            const { page, limit } = req?.body;
+        const { _id, isAdmin } = req?.me;
 
-            let filter: any = {};
-            !isAdmin && (filter = { $or: [{ by: _id }, { to: _id }] })
+        let filter: any = {};
+        !isAdmin && (filter = { $or: [{ by: _id }, { to: _id }], isDeleted: false })
 
-            await models?.Order.find(filter).sort({ _id: -1 }).limit(limit * 1)
-                .skip((page - 1) * limit).then((result: any) => {
-                    sendResponse(res, 200, { data: result });
-                }).catch((error: any) => {
-                    sendResponse(res, 400, { message: error?.message });
-                })
-        } else {
-            sendResponse(res, 400, { message: "Enter a required fields" });
-        }
+        await models?.Order.find(filter).sort({ _id: -1 }).populate(['by', 'to', 'addressId']).then((result: any) => {
+            sendResponse(res, 200, { data: result });
+        }).catch((error: any) => {
+            sendResponse(res, 400, { message: error?.message });
+        })
     } catch (error: any) {
         sendResponse(res, 400, { message: error?.message });
     }

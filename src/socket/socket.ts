@@ -30,7 +30,6 @@ export const connectSocketServer = async (server: any) => {
 
     io.on("connection", async (socket: any) => {
         const { _id, fullName }: any = socket?.me;
-        console.log('🚀 ~ file: socket.ts:33 ~ io.on ~ fullName', fullName, socket.id);
         await models?.User.findOneAndUpdate({ _id }, { socketId: socket.id }, { new: true })
 
         socket.on('createRequest', async (data: any) => {
@@ -45,9 +44,31 @@ export const connectSocketServer = async (server: any) => {
             })
         })
 
-        socket.on("requestFalse", (data: any) => {
-            console.log("🚀 ~ file: socket.ts:46 ~ socket.on ~ data", data);
-            socket.emit("sendRequestFalse", data);
+        socket.on('requestTrue', async (data: any) => {
+            console.log('🚀 ~ file: socket.ts:51 ~ awaitmodels?.Order.create ~ data', data);
+            const requestId = data?._id;
+            delete data?._id;
+            await models?.Order.create(data).then(async (result: any) => {
+                console.log('🚀 ~ file: socket.ts:52 ~ awaitmodels?.Order.create ~ result', result);
+                await models?.Request.findOneAndUpdate({ _id: requestId }, { status: "success", isDeleted: true }, { new: true })
+                    .populate(["addressId", "by", "to"]).then((res: any) => {
+                        io.sockets.to([res?.by?.socketId, res?.to?.socketId]).emit('resendRequest', { status: true, data: res });
+                    }).catch((error: any) => {
+                        socket.emit("sendrequestTrue", { status: false, message: error.message });
+                    });
+            }).catch((error: any) => {
+                console.log('🚀 ~ file: socket.ts:61 ~ awaitmodels?.Order.create ~ error', error);
+                socket.emit("sendrequestTrue", { status: false, message: error.message });
+            });
+        });
+
+        socket.on("requestFalse", async (data: any) => {
+            await models?.Request.findOneAndUpdate({ _id: data?._id }, data, { new: true })
+                .populate(["addressId", "by", "to"]).then((res: any) => {
+                    io.sockets.to([res?.by?.socketId, res?.to?.socketId]).emit('resendRequest', { status: true, data: res });
+                }).catch((error: any) => {
+                    socket.emit("sendRequestFalse", { status: false, message: error.message });
+                })
         })
 
         // io.to(this.lUserSocketId).emit(emitEventName, errPayload);

@@ -5,7 +5,7 @@ import { addOrder, getOrder, updateOrder, deleteOrder, } from "../controllers/or
 
 router.post('/add', authGeneral, addOrder);
 
-router.post('/get', authGeneral, getOrder);
+router.get('/get', authGeneral, getOrder);
 
 router.put('/update', authGeneral, updateOrder,);
 
