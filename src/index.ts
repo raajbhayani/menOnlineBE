@@ -42,7 +42,7 @@ connectDB().then(() => {
 })
 
 const server = app.listen(process.env.PORT, () => {
-    console.log(`Men online app listening on port ${process.env.PORT}`)
+    console.log(`Server start on http://localhost:${process.env.PORT}`)
 })
 
 Socket.connectSocketServer(server);

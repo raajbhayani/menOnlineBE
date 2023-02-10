@@ -31,7 +31,7 @@ export const sendMessageFun = async (mobile: number, messageFor: string) => {
 
 export const createOtp = async (req: any, res: Response) => {
     try {
-        const { mobile, email, messageFor } = req?.body;
+        const { email } = req?.body;
         await models?.User.findOne({ email, isDeleted: false }).then(async (userRes: any) => {
             if (!userRes) sendResponse(res, 401, { data: "Unauthorized" });
             else {

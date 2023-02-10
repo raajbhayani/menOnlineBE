@@ -8,7 +8,9 @@ export const connectSocketServer = async (server: any) => {
 
     io.use((socket: any, next: any) => {
         try {
-            const token = socket?.handshake?.auth?.token;
+            let token: any;
+            socket?.handshake?.auth?.token && (token = socket?.handshake?.auth?.token)
+            socket?.handshake?.header?.token && (token = socket?.handshake?.header?.token)
 
             jwt.verify(token, process.env.JWT_PRIVATE_KEY || 'manOnline8080', async (err: any, decoded: any) => {
                 if (err) console.log("error", err.message);
@@ -17,10 +19,10 @@ export const connectSocketServer = async (server: any) => {
                         socket.me = result;
                         next();
                     } else {
-                        io.sockets.to(socket.id).emit("auth", { message: "user not found" })
+                        console.log("User is not found")
                     }
                 }).catch((error: any) => {
-                    io.sockets.to(socket.id).emit("auth", { message: "user not found" })
+                    console.log("User is not found")
                 })
             });
         } catch (error: any) {
@@ -36,7 +38,8 @@ export const connectSocketServer = async (server: any) => {
             data.by = _id;
             await models?.Request.create(data).then(async (result: any) => {
                 await models?.Request.findOne({ _id: result?._id }).populate(["categoryId", "addressId", "by", "to"]).then((res: any) => {
-                    io.sockets.to([res?.by?.socketId, res?.to?.socketId]).emit('resendRequest', { status: true, data: res });
+
+                    io.sockets.to([res?.by?.socketId.toString(), res?.to?.socketId.toString()]).emit('resendRequest', { status: true, data: res });
                 })
 
             }).catch((error: any) => {
@@ -45,7 +48,6 @@ export const connectSocketServer = async (server: any) => {
         })
 
         socket.on('requestTrue', async (data: any) => {
-            console.log('🚀 ~ file: socket.ts:51 ~ awaitmodels?.Order.create ~ data', data);
             const requestId = data?._id;
             delete data?._id;
             await models?.Order.create(data).then(async (result: any) => {
