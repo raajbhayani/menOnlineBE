@@ -10,7 +10,7 @@ export interface IUser {
     city: string
     state: string
     country: string
-    socketId: string
+    socketId: string[]
     isAdmin: boolean
     avatar: string
     review: Array<{ orderId: string, description: string, rate: number }>

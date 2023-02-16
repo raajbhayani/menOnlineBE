@@ -36,13 +36,11 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 connectDB().then(() => {
-    console.log("Database connected successfully")
+    const server = app.listen(process.env.PORT, () => {
+        console.log(`Server start on http://localhost:${process.env.PORT}`)
+    })
+    Socket.connectSocketServer(server);
 }).catch((error: any) => {
     console.log("Database Error index:--", error.message);
 })
 
-const server = app.listen(process.env.PORT, () => {
-    console.log(`Server start on http://localhost:${process.env.PORT}`)
-})
-
-Socket.connectSocketServer(server);

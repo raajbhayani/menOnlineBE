@@ -44,7 +44,7 @@ const userSchema = new Schema<IUser>({
     city: { type: String },
     state: { type: String },
     country: { type: String },
-    socketId: { type: String },
+    socketId: [{ type: String }],
     isAdmin: {
         type: Boolean,
         default: false
