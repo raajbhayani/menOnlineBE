@@ -133,7 +133,8 @@ export const updateUser = async (req: any, res: Response) => {
             let oldAvatar: any;
             if (req?.body?.avatar) {
                 oldAvatar = avatar;
-                req.body.avatar = await fileUpload(req?.avatar);
+                req.body.avatar = await fileUpload(req?.body?.avatar);
+                // req.body.avatar = ''
             }
             password && (req.body.password = await bcrypt.hash(password, 10));
 

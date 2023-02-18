@@ -16,15 +16,16 @@ const orderSchema = new Schema<IOrder>({
     },
     byIsConformed: {
         type: Boolean,
+        default: false
     },
     toIsConformed: {
         type: Boolean,
+        default: false
     },
     status: {
         type: String,
         enum: ["progress", "complete"],
-        default: "progress",
-        required: true
+        default: "progress"
     },
     price: {
         type: Number

@@ -41,7 +41,7 @@ export const getOrder = async (req: any, res: Response) => {
         let filter: any = {};
         !isAdmin && (filter = { $or: [{ by: _id }, { to: _id }], isDeleted: false })
 
-        await models?.Order.find(filter).sort({ _id: -1 }).populate(['by', 'to', 'addressId']).then((result: any) => {
+        await models?.Order.find(filter).sort({ _id: -1 }).populate(['by', 'to', 'addressId', 'categoryId']).then((result: any) => {
             sendResponse(res, 200, { data: result });
         }).catch((error: any) => {
             sendResponse(res, 400, { message: error?.message });

@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 app.use(morgan('dev'));
+app.use("/", express.static(process.env.ASSETS_STORAGE || ''));
 app.use(cors<Request>());
 
 app.use('/user', Routes?.userRoutes);
@@ -29,7 +30,7 @@ app.use('/request', Routes?.requestRouter);
 app.use('/workHistory', Routes?.workHistoryRouter);
 
 app.get('/', async (req: Request, res: Response) => {
-
+    await models?.User.updateMany({isDeleted: false},{ socketId: []})
     res.json({
         status: "Ok"
     })

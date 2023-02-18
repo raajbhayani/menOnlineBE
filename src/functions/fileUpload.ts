@@ -2,6 +2,7 @@ import fs from "fs";
 
 //upload file using base64
 export const fileUpload = async (file: string) => {
+
 	if (file?.includes(";base64,")) {
 		let base64Image = file?.split(";base64,");
 		let extension = base64Image[0].split("/").pop();
